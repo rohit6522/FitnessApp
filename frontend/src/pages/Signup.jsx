@@ -127,8 +127,8 @@ export default function Signup() {
                 {/* RIGHT IMAGE */}
                 <div className="w-1/2 hidden md:block relative overflow-hidden">
                     <img
-                        src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=2069&auto=format&fit=crop"
-                        alt="Gym Workout"
+                        src="https://www.kreedon.com/_next/image?url=https%3A%2F%2Fwww.kreedon.in%2Fwp-content%2Fuploads%2F2023%2F07%2F029_SD_07172007ca473-358a4bcdaf960e3d6d2c4865d79e4e96.jpg&w=3840&q=70"
+                        alt="The Great Khali"
                         className="h-full w-full object-cover object-center transition-transform duration-[10s] hover:scale-110"
                     />
                     {/* Gradient Overlay for blending */}
@@ -136,8 +136,8 @@ export default function Signup() {
                     
                     {/* Motivational Quote */}
                     <div className="absolute bottom-12 right-8 left-12 p-6 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 shadow-xl">
-                        <p className="text-white text-lg font-medium italic leading-relaxed">"Sweat is just fat crying. Your transformation begins here."</p>
-                        <p className="text-lime-500 text-sm mt-3 font-bold uppercase tracking-wider">— Fitness</p>
+                        <p className="text-white text-lg font-medium italic leading-relaxed">"You won't get my kind of body if you eat junk food."</p>
+                        <p className="text-lime-500 text-sm mt-3 font-bold uppercase tracking-wider">— The Great Khali</p>
                     </div>
                 </div>
 

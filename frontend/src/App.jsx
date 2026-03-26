@@ -4,6 +4,8 @@ import Signup from "./pages/Signup"
 import Dashboard from "./pages/Dashboard"
 import Forgot from "./pages/Forgot"
 import Reset from "./pages/Reset"
+import Plan from "./pages/Plan"
+import Profile from "./pages/Profile"
 
 function App() {
     return (
@@ -15,6 +17,9 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/forgot" element={<Forgot />} />
                 <Route path="/reset" element={<Reset />} />
+            <Route path="/profile" element={<Profile />} />
+
+                <Route path="/plan" element={<Plan />} />
             </Routes>
         </BrowserRouter>
     )

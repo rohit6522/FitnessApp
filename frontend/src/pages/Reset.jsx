@@ -8,6 +8,7 @@ export default function Reset() {
     const [otp, setOtp] = useState(["", "", "", "", "", ""])
     const [password, setPassword] = useState("")
     const [time, setTime] = useState(30)
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
     // OTP INPUT CHANGE
@@ -48,7 +49,9 @@ export default function Reset() {
     }, [time])
 
     // RESET PASSWORD
-    const resetPassword = async () => {
+    const resetPassword = async (e) => {
+        e.preventDefault()
+        setLoading(true)
         try {
             const finalOtp = otp.join("")
 
@@ -61,7 +64,9 @@ export default function Reset() {
             toast.success("Password Updated ✅")
             navigate("/login")
         } catch (err) {
-            toast.error("Invalid OTP ❌")
+            toast.error(err.response?.data?.message || "Invalid OTP ❌")
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -77,58 +82,126 @@ export default function Reset() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-200 to-pink-200">
+        <div className="min-h-screen flex items-center justify-center bg-gray-950 relative overflow-hidden">
+            {/* Background Image with Overlay */}
+            <div 
+                className="absolute inset-0 z-0 bg-cover bg-center"
+                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1526506159907-4e386ce5b10b?q=80&w=2070&auto=format&fit=crop')" }}
+            >
+                <div className="absolute inset-0 bg-black/80 backdrop-blur-[2px]"></div>
+            </div>
 
-            <div className="bg-white/40 backdrop-blur-lg p-8 rounded-xl shadow-lg text-center w-[320px]">
+            {/* Glowing Orbs for Trending Aesthetic */}
+            <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-lime-500/20 rounded-full blur-[120px] animate-pulse"></div>
+            <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: "1s" }}></div>
 
-                <h2 className="text-2xl font-bold mb-4">Enter OTP</h2>
+            <div className="z-10 flex w-full max-w-[1000px] h-[650px] mx-4 rounded-3xl overflow-hidden shadow-2xl bg-white/5 backdrop-blur-xl border border-white/10 transition-all duration-500">
 
-                <input
-                    placeholder="Email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full p-2 mb-4 border rounded"
-                />
+                {/* LEFT FORM */}
+                <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center relative">
+                    <div className="max-w-md w-full mx-auto animate-fadeIn">
+                        
+                        <div className="mb-8 text-center md:text-left">
+                            <h1 className="text-4xl font-black text-white mb-2 tracking-tighter">
+                                FIT<span className="text-lime-500">NESS</span>
+                            </h1>
+                            <p className="text-gray-400 font-medium tracking-wide text-sm">Secure your account and get back on track.</p>
+                        </div>
 
-                {/* OTP BOXES */}
-                <div 
-                    className="flex justify-center gap-2 mb-4"
-                    onPaste={handlePaste}
-                >
-                    {otp.map((digit, i) => (
-                        <input
-                            key={i}
-                            id={`otp-${i}`}
-                            maxLength="1"
-                            value={digit}
-                            onChange={(e) => handleOTPChange(e.target.value, i)}
-                            onKeyDown={(e) => handleKeyDown(e, i)}
-                            className="w-10 h-10 text-center border rounded text-lg focus:ring-2 focus:ring-purple-400"
-                        />
-                    ))}
+                        <h2 className="text-2xl font-bold text-white mb-6 text-center md:text-left">Enter OTP</h2>
+
+                        <form onSubmit={resetPassword} className="space-y-5">
+
+                            <div className="space-y-1.5">
+                                <label className="text-sm font-semibold text-gray-300">Email Address</label>
+                                <input
+                                    type="email"
+                                    placeholder="Enter your email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    className="w-full p-3.5 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
+                                />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label className="text-sm font-semibold text-gray-300">6-Digit OTP</label>
+                                {/* OTP BOXES */}
+                                <div 
+                                    className="flex justify-between gap-2"
+                                    onPaste={handlePaste}
+                                >
+                                    {otp.map((digit, i) => (
+                                        <input
+                                            key={i}
+                                            id={`otp-${i}`}
+                                            maxLength="1"
+                                            value={digit}
+                                            onChange={(e) => handleOTPChange(e.target.value, i)}
+                                            onKeyDown={(e) => handleKeyDown(e, i)}
+                                            required
+                                            className="w-12 h-12 md:w-14 md:h-14 text-center rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500 text-xl font-bold"
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label className="text-sm font-semibold text-gray-300">New Password</label>
+                                <input
+                                    type="password"
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    className="w-full p-3.5 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
+                                />
+                            </div>
+
+                            <button 
+                                disabled={loading}
+                                className="w-full bg-gradient-to-r from-lime-500 to-emerald-500 text-black font-extrabold text-lg py-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(132,204,22,0.4)] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed mt-4"
+                            >
+                                {loading ? "Resetting..." : "RESET PASSWORD"}
+                            </button>
+
+                            {/* RESEND & BACK */}
+                            <div className="flex flex-col items-center gap-3 mt-4">
+                                <p 
+                                    onClick={() => time === 0 && resendOTP()}
+                                    className={`text-sm font-semibold transition-colors ${time > 0 ? "text-gray-600 cursor-not-allowed" : "text-lime-500 cursor-pointer hover:underline"}`}
+                                >
+                                    {time > 0 ? `Resend OTP in ${time}s` : "Resend OTP"}
+                                </p>
+                                
+                                <button
+                                    type="button"
+                                    onClick={() => navigate("/login")}
+                                    className="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2 group"
+                                >
+                                    <span className="group-hover:-translate-x-1 transition-transform">←</span> Back to Login
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
-                <input
-                    type="password"
-                    placeholder="New Password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full p-2 mb-4 border rounded"
-                />
-
-                <button
-                    onClick={resetPassword}
-                    className="w-full bg-green-500 text-white py-2 rounded hover:scale-105 transition"
-                >
-                    Reset Password
-                </button>
-
-                {/* RESEND */}
-                <p 
-                    onClick={() => time === 0 && resendOTP()}
-                    className="mt-3 text-sm cursor-pointer"
-                >
-                    {time > 0 ? `Resend OTP in ${time}s` : "Resend OTP"}
-                </p>
-
+                {/* RIGHT IMAGE */}
+                <div className="w-1/2 hidden md:block relative overflow-hidden">
+                    <img
+                        src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2070&auto=format&fit=crop"
+                        alt="Gym Dumbbells"
+                        className="h-full w-full object-cover object-center transition-transform duration-[10s] hover:scale-110"
+                    />
+                    {/* Gradient Overlay for blending */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent"></div>
+                    
+                    {/* Motivational Quote */}
+                    <div className="absolute bottom-12 right-8 left-12 p-6 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 shadow-xl">
+                        <p className="text-white text-lg font-medium italic leading-relaxed">"Your comeback is always stronger than your setback."</p>
+                        <p className="text-lime-500 text-sm mt-3 font-bold uppercase tracking-wider">— Fitness</p>
+                    </div>
+                </div>
             </div>
         </div>
     )

@@ -71,7 +71,7 @@ exports.forgotPassword = async (req, res) => {
         user.otpExpiry = Date.now() + 5 * 60 * 1000
         await user.save()
 
-        console.log("OTP:", otp)
+        // console.log("OTP:", otp)
 
         // Email send
         const transporter = nodemailer.createTransport({
