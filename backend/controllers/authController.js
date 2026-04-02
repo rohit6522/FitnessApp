@@ -34,23 +34,37 @@ exports.login = async (req, res) => {
         const { email, password } = req.body
 
         const user = await User.findOne({ email })
+
         if (!user) {
-            return res.status(400).json({ msg: "User not found" })
+            return res.status(400).json({ message: "User not found" })
         }
 
         const isMatch = await bcrypt.compare(password, user.password)
+
         if (!isMatch) {
-            return res.status(400).json({ msg: "Invalid password" })
+            return res.status(400).json({ message: "Wrong password" })
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
+        const token = jwt.sign(
+            { id: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+        )
 
-        res.json({ token, user: { name: user.name, email: user.email } })
-    } catch (error) {
-        res.status(500).json({ msg: "Server error" })
+        res.json({
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        })
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ message: "Server Error" })
     }
 }
-
 
 // forgot 
 
@@ -86,7 +100,7 @@ exports.forgotPassword = async (req, res) => {
             from: "YOUR_EMAIL@gmail.com",
             to: email,
             subject: "OTP for Password Reset",
-            text: `Your OTP is ${otp}`
+            text: `Please verify you're really you by entering this 6-digit code when you sign in ${otp}`
         })
 
         res.json({ msg: "OTP sent to email" })

@@ -4,7 +4,7 @@ module.exports = (req, res, next) => {
 
     const header = req.headers.authorization
 
-    console.log("HEADER:", header) // 👈 DEBUG
+    console.log("HEADER:", header) //  DEBUG
 
     if (!header) {
         return res.status(401).json({ msg: "No token" })

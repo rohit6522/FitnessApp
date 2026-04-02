@@ -3,24 +3,35 @@ import { useState, useEffect } from "react"
 import { API } from "../api"
 import { toast } from "sonner"
 
+import { useNavigate } from "react-router-dom"
+const user = JSON.parse(localStorage.getItem("user"))
+
 export default function Plan() {
+    
+    const navigate = useNavigate()
 
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
+    const [editModal, setEditModal] = useState(false)
+    const [editId, setEditId] = useState(null)
     const [activeDay, setActiveDay] = useState("Thu")
     const [workouts, setWorkouts] = useState([])
     const [showModal, setShowModal] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+        const savedTheme = localStorage.getItem("theme");
+        return savedTheme ? savedTheme === "dark" : true;
+    })
 
     const [workoutName, setWorkoutName] = useState("")
     const [type, setType] = useState("Strength")
 
     const [exerciseName, setExerciseName] = useState("")
+    const [exerciseList, setExerciseList] = useState([])
     const [sets, setSets] = useState("")
     const [reps, setReps] = useState("")
     const [time, setTime] = useState("")
 
-    const [exerciseList, setExerciseList] = useState([])
 
     // FETCH
     useEffect(() => {
@@ -35,9 +46,10 @@ export default function Plan() {
     const addExercise = () => {
         if (!exerciseName) return
 
-        const newExercise = { name: exerciseName, sets, reps, time }
-
-        setExerciseList([...exerciseList, newExercise])
+        setExerciseList([
+            ...exerciseList,
+            { name: exerciseName, sets, reps, time }
+        ])
 
         setExerciseName("")
         setSets("")
@@ -63,7 +75,7 @@ export default function Plan() {
             setWorkouts([...workouts, res.data])
 
             setIsSuccess(true)
-            
+
             setTimeout(() => {
                 setWorkoutName("")
                 setExerciseList([])
@@ -79,22 +91,80 @@ export default function Plan() {
 
 
     // DELETE
+    const deleteExercise = (index) => {
+        const updated = exerciseList.filter((_, i) => i !== index)
+        setExerciseList(updated)
+    }
+
+    const openEdit = (w) => {
+        setShowModal(false)
+        setEditId(w._id)
+        setWorkoutName(w.name)
+        setType(w.type)
+        setExerciseList(w.exercises || [])
+        setEditModal(true)
+    }
+
     const deleteWorkout = async (id) => {
-        await API.delete(`/workouts/${id}`)
-        setWorkouts(workouts.filter(w => w._id !== id))
+        try {
+            await API.delete(`/workouts/${id}`)
+
+            setWorkouts(workouts.filter(w => w._id !== id))
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const updateWorkout = async () => {
+        try {
+            const res = await API.put(`/workouts/${editId}`, {
+                name: workoutName,
+                type,
+                exercises: exerciseList
+            })
+
+            setWorkouts(workouts.map(w =>
+                w._id === editId ? res.data : w
+            ))
+
+            setEditModal(false)
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const toggleTheme = () => {
+        setIsDarkMode(!isDarkMode);
+        localStorage.setItem("theme", !isDarkMode ? "dark" : "light");
     }
 
     return (
-        <div className="min-h-screen bg-gray-950 relative overflow-hidden p-6">
+        <div className={`min-h-screen relative overflow-hidden p-6 transition-colors duration-500 ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
             {/* Glowing Orbs for Aesthetic */}
             <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-lime-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
 
             <div className="max-w-6xl mx-auto relative z-10">
-                <Navbar />
+                <Navbar isDarkMode={isDarkMode} />
+
+                {/* THEME TOGGLE */}
+                <div className="flex justify-end mb-4 mt-2">
+                    <button
+                        onClick={toggleTheme}
+                        className={`px-5 py-2.5 rounded-xl font-bold transition-all duration-300 border shadow-sm flex items-center gap-2 ${
+                            isDarkMode
+                                ? "bg-white/10 text-white border-white/20 hover:bg-white/20"
+                                : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+                        }`}
+                    >
+                        {isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+                    </button>
+                </div>
 
                 {/* HEADER */}
-                <h1 className="text-4xl font-black text-white mb-8 tracking-tight">
+                <h1 className={`text-4xl font-black mb-8 tracking-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>
                     My <span className="text-lime-500">Plan</span>
                 </h1>
 
@@ -104,11 +174,10 @@ export default function Plan() {
                         <button
                             key={day}
                             onClick={() => setActiveDay(day)}
-                            className={`px-6 py-2.5 rounded-xl font-bold transition-all duration-300 ${
-                                activeDay === day
-                                    ? "bg-gradient-to-r from-lime-500 to-emerald-500 text-black shadow-[0_0_20px_rgba(132,204,22,0.4)] scale-105"
-                                    : "bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white"
-                            }`}
+                            className={`px-6 py-2.5 rounded-xl font-bold transition-all duration-300 ${activeDay === day
+                                ? "bg-gradient-to-r from-lime-500 to-emerald-500 text-black shadow-[0_0_20px_rgba(132,204,22,0.4)] scale-105"
+                                : isDarkMode ? "bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white" : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-100 hover:text-gray-900 shadow-sm"
+                                }`}
                         >
                             {day}
                         </button>
@@ -117,14 +186,14 @@ export default function Plan() {
 
                 {/* WORKOUT LIST OR EMPTY STATE */}
                 {workouts.length === 0 ? (
-                    <div className="bg-white/5 backdrop-blur-xl border border-white/10 border-dashed p-20 text-center rounded-3xl shadow-lg transition-all hover:bg-white/10">
-                        <p className="text-gray-400 font-medium mb-6 text-lg">
+                    <div className={`backdrop-blur-xl border border-dashed p-20 text-center rounded-3xl shadow-lg transition-all duration-500 ${isDarkMode ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-white border-gray-300 hover:bg-gray-50"}`}>
+                        <p className={`font-medium mb-6 text-lg ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
                             No workout planned for <span className="text-lime-500 font-bold">{activeDay}</span>
                         </p>
 
                         <button
                             onClick={() => setShowModal(true)}
-                            className="bg-white/10 text-white font-bold px-8 py-3 rounded-xl border border-white/20 hover:bg-lime-500 hover:text-black hover:border-lime-500 transition-all duration-300"
+                            className={`font-bold px-8 py-3 rounded-xl border transition-all duration-300 hover:bg-lime-500 hover:text-black hover:border-lime-500 shadow-sm ${isDarkMode ? "bg-white/10 text-white border-white/20" : "bg-white text-gray-800 border-gray-200"}`}
                         >
                             + Add Workout
                         </button>
@@ -132,30 +201,39 @@ export default function Plan() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {workouts.map(w => (
-                            <div key={w._id} className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl shadow-lg relative overflow-hidden group">
+                            <div key={w._id} className={`backdrop-blur-xl border p-6 rounded-3xl shadow-lg relative overflow-hidden group transition-colors duration-500 ${isDarkMode ? "bg-white/5 border-white/10" : "bg-white border-gray-200"}`}>
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-lime-500/10 rounded-full blur-[50px] group-hover:bg-lime-500/20 transition-all duration-500 pointer-events-none"></div>
-                                
+
                                 <div className="flex justify-between items-start relative z-10 mb-4">
                                     <div>
-                                        <h2 className="text-2xl font-bold text-white mb-1">{w.name}</h2>
-                                        <span className="inline-block px-3 py-1 bg-white/10 text-lime-400 text-xs font-semibold rounded-lg tracking-wider uppercase">{w.type}</span>
+                                        <h2 className={`text-2xl font-bold mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{w.name}</h2>
+                                        <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-lg tracking-wider uppercase ${isDarkMode ? "bg-white/10 text-lime-400" : "bg-lime-100 text-lime-700"}`}>{w.type}</span>
                                     </div>
 
-                                    <button
-                                        onClick={() => deleteWorkout(w._id)}
-                                        className="text-gray-500 hover:text-red-500 p-2 hover:bg-red-500/10 rounded-xl transition-all"
-                                        title="Delete Workout"
-                                    >
-                                        ✖
-                                    </button>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => openEdit(w)}
+                                            className="text-blue-500"
+                                        >
+                                            ✏️
+                                        </button>
+
+                                        <button
+                                            onClick={() => deleteWorkout(w._id)}
+                                            className="text-red-500"
+                                        >
+                                            ❌
+                                        </button>
+                                    </div>
+
                                 </div>
 
                                 {/* EXERCISES */}
                                 <div className="space-y-2 relative z-10">
                                     {w.exercises?.map((ex, i) => (
-                                        <div key={i} className="flex justify-between items-center bg-black/40 p-3.5 rounded-xl border border-white/5">
-                                            <p className="text-white font-medium">{ex.name}</p>
-                                            <p className="text-lime-500 text-sm font-bold bg-lime-500/10 px-3 py-1 rounded-lg">
+                                        <div key={i} className={`flex justify-between items-center p-3.5 rounded-xl border ${isDarkMode ? "bg-black/40 border-white/5" : "bg-gray-50 border-gray-200"}`}>
+                                            <p className={`font-medium ${isDarkMode ? "text-white" : "text-gray-800"}`}>{ex.name}</p>
+                                            <p className={`text-sm font-bold px-3 py-1 rounded-lg ${isDarkMode ? "text-lime-500 bg-lime-500/10" : "text-lime-700 bg-lime-100"}`}>
                                                 {ex.sets} sets • {ex.reps} reps • {ex.time}s
                                             </p>
                                         </div>
@@ -170,77 +248,77 @@ export default function Plan() {
             {/* MODAL */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-[#0a0a0a] border border-white/10 w-full max-w-md p-8 rounded-3xl shadow-2xl animate-fadeIn relative overflow-hidden">
+                    <div className={`border w-full max-w-md p-8 rounded-3xl shadow-2xl animate-fadeIn relative overflow-hidden ${isDarkMode ? "bg-[#0a0a0a] border-white/10" : "bg-white border-gray-200"}`}>
                         <div className="absolute top-[-20%] right-[-20%] w-48 h-48 bg-lime-500/20 rounded-full blur-[80px] pointer-events-none"></div>
-                        
+
                         {isSuccess ? (
                             <div className="flex flex-col items-center justify-center py-12 relative z-10 animate-fadeIn">
                                 <div className="w-24 h-24 bg-gradient-to-r from-lime-500 to-emerald-500 rounded-full flex items-center justify-center animate-bounce shadow-[0_0_40px_rgba(132,204,22,0.6)] mb-6">
-                                    <svg className="w-12 h-12 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <svg className="w-12 h-12 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinelinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </div>
-                                <h2 className="text-3xl font-black text-white tracking-tight">Plan Created!</h2>
-                                <p className="text-gray-400 mt-2 font-medium text-sm">Get ready to crush it 💪</p>
+                                <h2 className={`text-3xl font-black tracking-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>Plan Created!</h2>
+                                <p className={`mt-2 font-medium text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Get ready to crush it 💪</p>
                             </div>
                         ) : (
                             <>
                                 <div className="flex justify-between items-center mb-6 relative z-10">
-                                    <h2 className="text-2xl font-black text-white tracking-tight">Create Workout</h2>
-                                    <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-white transition-colors bg-white/5 p-2 rounded-xl">✖</button>
+                                    <h2 className={`text-2xl font-black tracking-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>Create Workout</h2>
+                                    <button onClick={() => setShowModal(false)} className={`transition-colors p-2 rounded-xl ${isDarkMode ? "text-gray-500 hover:text-white bg-white/5" : "text-gray-500 hover:text-gray-900 bg-gray-100"}`}>✖</button>
                                 </div>
 
                                 <div className="space-y-4 relative z-10">
                                     <div className="space-y-1.5">
-                                        <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Workout Name</label>
+                                        <label className={`text-xs font-semibold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Workout Name</label>
                                         <input
                                             value={workoutName}
                                             onChange={(e) => setWorkoutName(e.target.value)}
                                             placeholder="E.g., Chest Day"
-                                            className="w-full p-3.5 rounded-xl bg-white/5 text-white outline-none border border-white/10 placeholder-gray-600 transition-all focus:bg-white/10 focus:border-lime-500"
+                                            className={`w-full p-3.5 rounded-xl outline-none border transition-all focus:border-lime-500 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
                                         />
                                     </div>
 
                                     <div className="space-y-1.5">
-                                        <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Workout Type</label>
+                                        <label className={`text-xs font-semibold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Workout Type</label>
                                         <select
                                             value={type}
                                             onChange={(e) => setType(e.target.value)}
-                                            className="w-full p-3.5 rounded-xl bg-[#111] text-white outline-none border border-white/10 transition-all focus:border-lime-500 appearance-none cursor-pointer"
+                                            className={`w-full p-3.5 rounded-xl outline-none border transition-all focus:border-lime-500 appearance-none cursor-pointer ${isDarkMode ? "bg-[#111] text-white border-white/10" : "bg-gray-50 text-gray-900 border-gray-200"}`}
                                         >
-                                            <option className="bg-gray-900">Strength</option>
-                                            <option className="bg-gray-900">Cardio</option>
-                                            <option className="bg-gray-900">HIIT</option>
-                                            <option className="bg-gray-900">Yoga</option>
+                                            <option className={isDarkMode ? "bg-gray-900" : "bg-white"}>Strength</option>
+                                            <option className={isDarkMode ? "bg-gray-900" : "bg-white"}>Cardio</option>
+                                            <option className={isDarkMode ? "bg-gray-900" : "bg-white"}>HIIT</option>
+                                            <option className={isDarkMode ? "bg-gray-900" : "bg-white"}>Yoga</option>
                                         </select>
                                     </div>
 
-                                    <div className="pt-4 border-t border-white/10">
+                                    <div className={`pt-4 border-t ${isDarkMode ? "border-white/10" : "border-gray-200"}`}>
                                         <label className="text-xs font-semibold text-lime-500 uppercase tracking-wider mb-2 block">Add Exercises</label>
                                         <input
                                             value={exerciseName}
                                             onChange={(e) => setExerciseName(e.target.value)}
                                             placeholder="Exercise Name"
-                                            className="w-full p-3 rounded-xl bg-white/5 text-white outline-none border border-white/10 placeholder-gray-600 transition-all focus:bg-white/10 focus:border-lime-500 mb-3"
+                                            className={`w-full p-3 rounded-xl outline-none border transition-all focus:border-lime-500 mb-3 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
                                         />
 
                                         <div className="flex gap-2 mb-4">
-                                            <input value={sets} onChange={(e) => setSets(e.target.value)} placeholder="Sets" type="number" className="w-1/3 p-3 rounded-xl bg-white/5 text-white outline-none border border-white/10 placeholder-gray-600 focus:border-lime-500 text-center" />
-                                            <input value={reps} onChange={(e) => setReps(e.target.value)} placeholder="Reps" type="number" className="w-1/3 p-3 rounded-xl bg-white/5 text-white outline-none border border-white/10 placeholder-gray-600 focus:border-lime-500 text-center" />
-                                            <input value={time} onChange={(e) => setTime(e.target.value)} placeholder="Time(s)" type="number" className="w-1/3 p-3 rounded-xl bg-white/5 text-white outline-none border border-white/10 placeholder-gray-600 focus:border-lime-500 text-center" />
+                                            <input value={sets} onChange={(e) => setSets(e.target.value)} placeholder="Sets" type="number" className={`w-1/3 p-3 rounded-xl outline-none border placeholder-gray-600 focus:border-lime-500 text-center ${isDarkMode ? "bg-white/5 text-white border-white/10" : "bg-gray-50 text-gray-900 border-gray-200"}`} />
+                                            <input value={reps} onChange={(e) => setReps(e.target.value)} placeholder="Reps" type="number" className={`w-1/3 p-3 rounded-xl outline-none border placeholder-gray-600 focus:border-lime-500 text-center ${isDarkMode ? "bg-white/5 text-white border-white/10" : "bg-gray-50 text-gray-900 border-gray-200"}`} />
+                                            <input value={time} onChange={(e) => setTime(e.target.value)} placeholder="Time(s)" type="number" className={`w-1/3 p-3 rounded-xl outline-none border placeholder-gray-600 focus:border-lime-500 text-center ${isDarkMode ? "bg-white/5 text-white border-white/10" : "bg-gray-50 text-gray-900 border-gray-200"}`} />
                                         </div>
-                                        <button onClick={addExercise} className="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-2.5 rounded-xl border border-white/10 transition-all">
+                                        <button onClick={addExercise} className={`w-full font-semibold py-2.5 rounded-xl border transition-all ${isDarkMode ? "bg-white/10 hover:bg-white/20 text-white border-white/10" : "bg-gray-100 hover:bg-gray-200 text-gray-800 border-gray-200"}`}>
                                             + Add to List
                                         </button>
                                     </div>
 
                                     {/* SHOW EXERCISES */}
                                     {exerciseList.length > 0 && (
-                                        <div className="bg-black/40 rounded-xl p-3 max-h-40 overflow-y-auto border border-white/5 space-y-2 mt-4">
+                                        <div className={`rounded-xl p-3 max-h-40 overflow-y-auto border space-y-2 mt-4 ${isDarkMode ? "bg-black/40 border-white/5" : "bg-gray-50 border-gray-200"}`}>
                                             {exerciseList.map((ex, i) => (
-                                                <div key={i} className="flex justify-between items-center text-sm border-b border-white/5 pb-2 last:border-0 last:pb-0">
-                                                    <span className="text-white font-medium">{ex.name}</span>
-                                                    <span className="text-lime-500 bg-lime-500/10 px-2 py-1 rounded-md">{ex.sets} sets • {ex.reps} reps • {ex.time}s</span>
+                                                <div key={i} className={`flex justify-between items-center text-sm border-b pb-2 last:border-0 last:pb-0 ${isDarkMode ? "border-white/5" : "border-gray-200"}`}>
+                                                    <span className={`font-medium ${isDarkMode ? "text-white" : "text-gray-800"}`}>{ex.name}</span>
+                                                    <span className={`px-2 py-1 rounded-md ${isDarkMode ? "text-lime-500 bg-lime-500/10" : "text-lime-700 bg-lime-100"}`}>{ex.sets} sets • {ex.reps} reps • {ex.time}s</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -252,12 +330,128 @@ export default function Plan() {
                                     >
                                         CREATE PLAN
                                     </button>
+
+
                                 </div>
                             </>
                         )}
                     </div>
                 </div>
             )}
+
+
+            {/* EDIT MODAL */}
+            {editModal && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+                    <div className={`border w-full max-w-md p-8 rounded-3xl shadow-2xl animate-fadeIn relative overflow-hidden ${isDarkMode ? "bg-[#0a0a0a] border-white/10" : "bg-white border-gray-200"}`}>
+                        <div className="absolute top-[-20%] right-[-20%] w-48 h-48 bg-blue-500/20 rounded-full blur-[80px] pointer-events-none"></div>
+
+                        <div className="flex justify-between items-center mb-6 relative z-10">
+                            <h2 className={`text-2xl font-black tracking-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>Edit Workout</h2>
+                            <button onClick={() => setEditModal(false)} className={`transition-colors p-2 rounded-xl ${isDarkMode ? "text-gray-500 hover:text-white bg-white/5" : "text-gray-500 hover:text-gray-900 bg-gray-100"}`}>✖</button>
+                        </div>
+
+                        <div className="space-y-4 relative z-10">
+                            <div className="space-y-1.5">
+                                <label className={`text-xs font-semibold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Workout Name</label>
+                                <input
+                                    value={workoutName}
+                                    onChange={(e) => setWorkoutName(e.target.value)}
+                                    placeholder="E.g., Chest Day"
+                                    className={`w-full p-3.5 rounded-xl outline-none border transition-all focus:border-blue-500 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
+                                />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label className={`text-xs font-semibold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Workout Type</label>
+                                <select
+                                    value={type}
+                                    onChange={(e) => setType(e.target.value)}
+                                    className={`w-full p-3.5 rounded-xl outline-none border transition-all focus:border-blue-500 appearance-none cursor-pointer ${isDarkMode ? "bg-[#111] text-white border-white/10" : "bg-gray-50 text-gray-900 border-gray-200"}`}
+                                >
+                                    <option className={isDarkMode ? "bg-gray-900" : "bg-white"}>Strength</option>
+                                    <option className={isDarkMode ? "bg-gray-900" : "bg-white"}>Cardio</option>
+                                    <option className={isDarkMode ? "bg-gray-900" : "bg-white"}>HIIT</option>
+                                    <option className={isDarkMode ? "bg-gray-900" : "bg-white"}>Yoga</option>
+                                </select>
+                            </div>
+
+                            <div className={`pt-4 border-t ${isDarkMode ? "border-white/10" : "border-gray-200"}`}>
+                                <label className="text-xs font-semibold text-blue-500 uppercase tracking-wider mb-2 block">Add Exercises</label>
+                                <input
+                                    value={exerciseName}
+                                    onChange={(e) => setExerciseName(e.target.value)}
+                                    placeholder="Exercise Name"
+                                    className={`w-full p-3 rounded-xl outline-none border transition-all focus:border-blue-500 mb-3 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
+                                />
+
+                                <div className="flex gap-2 mb-4">
+                                    <input value={sets} onChange={(e) => setSets(e.target.value)} placeholder="Sets" type="number" className={`w-1/3 p-3 rounded-xl outline-none border placeholder-gray-600 focus:border-blue-500 text-center ${isDarkMode ? "bg-white/5 text-white border-white/10" : "bg-gray-50 text-gray-900 border-gray-200"}`} />
+                                    <input value={reps} onChange={(e) => setReps(e.target.value)} placeholder="Reps" type="number" className={`w-1/3 p-3 rounded-xl outline-none border placeholder-gray-600 focus:border-blue-500 text-center ${isDarkMode ? "bg-white/5 text-white border-white/10" : "bg-gray-50 text-gray-900 border-gray-200"}`} />
+                                    <input value={time} onChange={(e) => setTime(e.target.value)} placeholder="Time(s)" type="number" className={`w-1/3 p-3 rounded-xl outline-none border placeholder-gray-600 focus:border-blue-500 text-center ${isDarkMode ? "bg-white/5 text-white border-white/10" : "bg-gray-50 text-gray-900 border-gray-200"}`} />
+                                </div>
+                                <button onClick={addExercise} className={`w-full font-semibold py-2.5 rounded-xl border transition-all ${isDarkMode ? "bg-white/10 hover:bg-white/20 text-white border-white/10" : "bg-gray-100 hover:bg-gray-200 text-gray-800 border-gray-200"}`}>
+                                    + Add to List
+                                </button>
+                            </div>
+
+                            {/* SHOW EXERCISES */}
+                            {exerciseList.length > 0 && (
+                                <div className={`rounded-xl p-3 max-h-40 overflow-y-auto border space-y-2 mt-4 ${isDarkMode ? "bg-black/40 border-white/5" : "bg-gray-50 border-gray-200"}`}>
+                                    {exerciseList.map((ex, i) => (
+                                        <div key={i} className={`flex justify-between items-center text-sm border-b pb-2 last:border-0 last:pb-0 ${isDarkMode ? "border-white/5" : "border-gray-200"}`}>
+                                            <div>
+                                                <span className={`font-medium block ${isDarkMode ? "text-white" : "text-gray-800"}`}>{ex.name}</span>
+                                                <span className={`px-2 py-1 rounded-md mt-1 inline-block text-xs font-semibold ${isDarkMode ? "text-blue-400 bg-blue-500/10" : "text-blue-700 bg-blue-100"}`}>{ex.sets} sets • {ex.reps} reps • {ex.time}s</span>
+                                            </div>
+                                            <button
+                                                onClick={() => deleteExercise(i)}
+                                                className="text-red-500 hover:text-red-400 bg-red-500/10 p-2 rounded-lg transition-colors"
+                                                title="Remove exercise"
+                                            >
+                                                ✖
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            <button
+                                onClick={updateWorkout}
+                                className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-black font-extrabold text-lg py-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] active:scale-95 mt-6"
+                            >
+                                UPDATE PLAN
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
+
         </div>
+
+            
+        
     )
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
