@@ -61,10 +61,10 @@ export default function Reset() {
                 newPassword: password
             })
 
-            toast.success("Password Updated ✅")
+            toast.success("Password Updated ")
             navigate("/login")
         } catch (err) {
-            toast.error(err.response?.data?.message || "Invalid OTP ❌")
+            toast.error(err.response?.data?.message || "Invalid OTP ")
         } finally {
             setLoading(false)
         }

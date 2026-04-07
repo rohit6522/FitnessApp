@@ -18,10 +18,10 @@ export default function Signup() {
 
         try {
             await API.post("/auth/signup", form)
-            toast.success("Account created successfully! 🎉")
+            toast.success("Account created successfully")
             navigate("/login")
         } catch (error) {
-            toast.error(error.response?.data?.message || "Signup failed ❌")
+            toast.error(error.response?.data?.message || "Signup failed ")
         } finally {
             setLoading(false)
         }
