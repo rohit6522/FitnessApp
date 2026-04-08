@@ -23,7 +23,9 @@ export default function Login() {
             localStorage.setItem("user", JSON.stringify(res.data.user))
 
             toast.success("Login successful! 🚀")
-            navigate("/dashboard")
+            setTimeout(() => {
+                window.location.href = "/dashboard"
+            }, 500)
         } catch (error) {
             toast.error(error.response?.data?.message || "Invalid credentials ❌")
         } finally {
@@ -32,7 +34,7 @@ export default function Login() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-950 relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center bg-gray-950 relative overflow-hidden py-10">
             {/* Background Image with Overlay */}
             <div 
                 className="absolute inset-0 z-0 bg-cover bg-center"
@@ -45,7 +47,7 @@ export default function Login() {
             <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-lime-500/20 rounded-full blur-[120px] animate-pulse"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-emerald-500/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: "1s" }}></div>
 
-            <div className="z-10 flex w-full max-w-[1000px] h-[600px] mx-4 rounded-3xl overflow-hidden shadow-2xl bg-white/5 backdrop-blur-xl border border-white/10 transition-all duration-500">
+            <div className="z-10 flex w-full max-w-[1000px] min-h-[600px] h-auto mx-4 rounded-3xl overflow-hidden shadow-2xl bg-white/5 backdrop-blur-xl border border-white/10 transition-all duration-500">
 
                 {/* LEFT FORM */}
                 <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center relative">

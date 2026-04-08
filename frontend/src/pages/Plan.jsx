@@ -4,6 +4,7 @@ import { API } from "../api"
 import { toast } from "sonner"
 
 import { useNavigate } from "react-router-dom"
+import { FaPlus, FaEdit, FaTrash, FaDumbbell, FaCheckCircle, FaTimes, FaCalendarAlt } from "react-icons/fa"
 const user = JSON.parse(localStorage.getItem("user"))
 
 export default function Plan() {
@@ -141,7 +142,7 @@ export default function Plan() {
     }
 
     return (
-        <div className={`min-h-screen relative overflow-hidden p-6 transition-colors duration-500 ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
+        <div className={`min-h-screen relative overflow-hidden p-4 md:p-6 transition-colors duration-500 ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
             {/* Glowing Orbs for Aesthetic */}
             <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-lime-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
@@ -164,9 +165,12 @@ export default function Plan() {
                 </div>
 
                 {/* HEADER */}
-                <h1 className={`text-4xl font-black mb-8 tracking-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-                    My <span className="text-lime-500">Plan</span>
-                </h1>
+                <div className="mb-10">
+                    <h1 className={`text-4xl md:text-5xl font-black tracking-tighter mb-3 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                        My <span className="text-lime-500">Plan</span>
+                    </h1>
+                    <p className={`font-medium text-lg ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Organize your weekly routine and stay consistent.</p>
+                </div>
 
                 {/* DAYS SELECTOR */}
                 <div className="flex flex-wrap gap-3 mb-8">
@@ -174,10 +178,13 @@ export default function Plan() {
                         <button
                             key={day}
                             onClick={() => setActiveDay(day)}
-                            className={`px-6 py-2.5 rounded-xl font-bold transition-all duration-300 ${activeDay === day
-                                ? "bg-gradient-to-r from-lime-500 to-emerald-500 text-black shadow-[0_0_20px_rgba(132,204,22,0.4)] scale-105"
-                                : isDarkMode ? "bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white" : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-100 hover:text-gray-900 shadow-sm"
-                                }`}
+                            className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 ease-out border active:scale-95 flex-1 sm:flex-none text-center ${
+                                activeDay === day
+                                    ? "bg-gradient-to-r from-lime-500 to-emerald-500 text-black border-transparent shadow-[0_10px_20px_-5px_rgba(132,204,22,0.5)] scale-110 -translate-y-1 z-10"
+                                    : isDarkMode 
+                                        ? "bg-white/5 text-gray-400 border-white/10 hover:bg-white/10 hover:text-white hover:border-lime-500/30 hover:shadow-[0_8px_15px_-5px_rgba(132,204,22,0.2)] hover:scale-105 hover:-translate-y-0.5 z-0" 
+                                        : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:text-gray-900 hover:border-lime-500/40 hover:shadow-[0_8px_15px_-5px_rgba(132,204,22,0.3)] hover:scale-105 hover:-translate-y-0.5 z-0"
+                            }`}
                         >
                             {day}
                         </button>
@@ -186,23 +193,24 @@ export default function Plan() {
 
                 {/* WORKOUT LIST OR EMPTY STATE */}
                 {workouts.length === 0 ? (
-                    <div className={`backdrop-blur-xl border border-dashed p-20 text-center rounded-3xl shadow-lg transition-all duration-500 ${isDarkMode ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-white border-gray-300 hover:bg-gray-50"}`}>
+                    <div className={`backdrop-blur-xl border border-dashed p-12 md:p-24 text-center rounded-[2.5rem] shadow-lg transition-all duration-500 ${isDarkMode ? "bg-white/5 border-white/10 hover:bg-white/10 hover:border-lime-500/30" : "bg-white border-gray-300 hover:bg-gray-50 hover:border-lime-500/50"}`}>
+                        <FaCalendarAlt className={`text-6xl mx-auto mb-6 opacity-20 ${isDarkMode ? "text-white" : "text-gray-900"}`} />
                         <p className={`font-medium mb-6 text-lg ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
                             No workout planned for <span className="text-lime-500 font-bold">{activeDay}</span>
                         </p>
 
                         <button
                             onClick={() => setShowModal(true)}
-                            className={`font-bold px-8 py-3 rounded-xl border transition-all duration-300 hover:bg-lime-500 hover:text-black hover:border-lime-500 shadow-sm ${isDarkMode ? "bg-white/10 text-white border-white/20" : "bg-white text-gray-800 border-gray-200"}`}
+                            className={`font-bold px-8 py-3.5 rounded-xl border transition-all duration-300 hover:scale-105 hover:bg-lime-500 hover:text-black hover:border-lime-500 shadow-sm flex items-center gap-2 mx-auto ${isDarkMode ? "bg-white/10 text-white border-white/20" : "bg-white text-gray-800 border-gray-200"}`}
                         >
-                            + Add Workout
+                            <FaPlus /> Add Workout
                         </button>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {workouts.map(w => (
-                            <div key={w._id} className={`backdrop-blur-xl border p-6 rounded-3xl shadow-lg relative overflow-hidden group transition-colors duration-500 ${isDarkMode ? "bg-white/5 border-white/10" : "bg-white border-gray-200"}`}>
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-lime-500/10 rounded-full blur-[50px] group-hover:bg-lime-500/20 transition-all duration-500 pointer-events-none"></div>
+                            <div key={w._id} className={`backdrop-blur-xl border p-6 md:p-8 rounded-[2rem] shadow-lg relative overflow-hidden group transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(132,204,22,0.3)] ${isDarkMode ? "bg-white/5 border-white/10 hover:border-lime-500/30" : "bg-white border-gray-200 hover:border-lime-500/50"}`}>
+                                <div className="absolute top-0 right-0 w-48 h-48 bg-lime-500/5 rounded-full blur-[60px] group-hover:scale-150 transition-all duration-700 pointer-events-none"></div>
 
                                 <div className="flex justify-between items-start relative z-10 mb-4">
                                     <div>
@@ -213,27 +221,32 @@ export default function Plan() {
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => openEdit(w)}
-                                            className="text-blue-500"
+                                            className={`p-2.5 rounded-xl transition-all duration-300 ${isDarkMode ? "bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 hover:scale-110" : "bg-blue-50 text-blue-600 hover:bg-blue-100 hover:scale-110"}`}
+                                            title="Edit Workout"
                                         >
-                                            ✏️
+                                            <FaEdit />
                                         </button>
 
                                         <button
                                             onClick={() => deleteWorkout(w._id)}
-                                            className="text-red-500"
+                                            className={`p-2.5 rounded-xl transition-all duration-300 ${isDarkMode ? "bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:scale-110" : "bg-red-50 text-red-600 hover:bg-red-100 hover:scale-110"}`}
+                                            title="Delete Workout"
                                         >
-                                            ❌
+                                            <FaTrash />
                                         </button>
                                     </div>
 
                                 </div>
 
                                 {/* EXERCISES */}
-                                <div className="space-y-2 relative z-10">
+                                <div className="space-y-3 relative z-10">
                                     {w.exercises?.map((ex, i) => (
-                                        <div key={i} className={`flex justify-between items-center p-3.5 rounded-xl border ${isDarkMode ? "bg-black/40 border-white/5" : "bg-gray-50 border-gray-200"}`}>
-                                            <p className={`font-medium ${isDarkMode ? "text-white" : "text-gray-800"}`}>{ex.name}</p>
-                                            <p className={`text-sm font-bold px-3 py-1 rounded-lg ${isDarkMode ? "text-lime-500 bg-lime-500/10" : "text-lime-700 bg-lime-100"}`}>
+                                        <div key={i} className={`flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 rounded-xl border transition-colors ${isDarkMode ? "bg-black/40 border-white/5 hover:border-white/10" : "bg-gray-50 border-gray-200 hover:bg-white hover:shadow-sm"}`}>
+                                            <p className={`font-semibold flex items-center gap-3 mb-2 sm:mb-0 ${isDarkMode ? "text-white" : "text-gray-800"}`}>
+                                                <div className={`p-2 rounded-lg ${isDarkMode ? "bg-lime-500/20 text-lime-400" : "bg-lime-100 text-lime-600"}`}><FaDumbbell className="text-sm" /></div>
+                                                {ex.name}
+                                            </p>
+                                            <p className={`text-sm font-bold px-3 py-1.5 rounded-lg text-center ${isDarkMode ? "text-lime-400 bg-lime-500/10" : "text-lime-700 bg-lime-100"}`}>
                                                 {ex.sets} sets • {ex.reps} reps • {ex.time}s
                                             </p>
                                         </div>
@@ -248,16 +261,12 @@ export default function Plan() {
             {/* MODAL */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className={`border w-full max-w-md p-8 rounded-3xl shadow-2xl animate-fadeIn relative overflow-hidden ${isDarkMode ? "bg-[#0a0a0a] border-white/10" : "bg-white border-gray-200"}`}>
+                    <div className={`border w-full max-w-md p-8 rounded-[2.5rem] shadow-2xl animate-fadeIn relative overflow-hidden ${isDarkMode ? "bg-[#0a0a0a] border-white/10" : "bg-white border-gray-200"}`}>
                         <div className="absolute top-[-20%] right-[-20%] w-48 h-48 bg-lime-500/20 rounded-full blur-[80px] pointer-events-none"></div>
 
                         {isSuccess ? (
                             <div className="flex flex-col items-center justify-center py-12 relative z-10 animate-fadeIn">
-                                <div className="w-24 h-24 bg-gradient-to-r from-lime-500 to-emerald-500 rounded-full flex items-center justify-center animate-bounce shadow-[0_0_40px_rgba(132,204,22,0.6)] mb-6">
-                                    <svg className="w-12 h-12 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinelinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                </div>
+                                <FaCheckCircle className="text-7xl text-lime-500 mb-6 animate-bounce drop-shadow-[0_0_15px_rgba(132,204,22,0.5)]" />
                                 <h2 className={`text-3xl font-black tracking-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>Plan Created!</h2>
                                 <p className={`mt-2 font-medium text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Get ready to crush it 💪</p>
                             </div>
@@ -265,7 +274,9 @@ export default function Plan() {
                             <>
                                 <div className="flex justify-between items-center mb-6 relative z-10">
                                     <h2 className={`text-2xl font-black tracking-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>Create Workout</h2>
-                                    <button onClick={() => setShowModal(false)} className={`transition-colors p-2 rounded-xl ${isDarkMode ? "text-gray-500 hover:text-white bg-white/5" : "text-gray-500 hover:text-gray-900 bg-gray-100"}`}>✖</button>
+                                    <button onClick={() => setShowModal(false)} className={`transition-all p-3 rounded-xl ${isDarkMode ? "text-gray-400 hover:text-white bg-white/5 hover:bg-white/10" : "text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200"}`}>
+                                        <FaTimes />
+                                    </button>
                                 </div>
 
                                 <div className="space-y-4 relative z-10">
@@ -308,7 +319,7 @@ export default function Plan() {
                                             <input value={time} onChange={(e) => setTime(e.target.value)} placeholder="Time(s)" type="number" className={`w-1/3 p-3 rounded-xl outline-none border placeholder-gray-600 focus:border-lime-500 text-center ${isDarkMode ? "bg-white/5 text-white border-white/10" : "bg-gray-50 text-gray-900 border-gray-200"}`} />
                                         </div>
                                         <button onClick={addExercise} className={`w-full font-semibold py-2.5 rounded-xl border transition-all ${isDarkMode ? "bg-white/10 hover:bg-white/20 text-white border-white/10" : "bg-gray-100 hover:bg-gray-200 text-gray-800 border-gray-200"}`}>
-                                            + Add to List
+                                            <span className="flex items-center justify-center gap-2"><FaPlus /> Add to List</span>
                                         </button>
                                     </div>
 
@@ -318,7 +329,7 @@ export default function Plan() {
                                             {exerciseList.map((ex, i) => (
                                                 <div key={i} className={`flex justify-between items-center text-sm border-b pb-2 last:border-0 last:pb-0 ${isDarkMode ? "border-white/5" : "border-gray-200"}`}>
                                                     <span className={`font-medium ${isDarkMode ? "text-white" : "text-gray-800"}`}>{ex.name}</span>
-                                                    <span className={`px-2 py-1 rounded-md ${isDarkMode ? "text-lime-500 bg-lime-500/10" : "text-lime-700 bg-lime-100"}`}>{ex.sets} sets • {ex.reps} reps • {ex.time}s</span>
+                                                    <span className={`px-2.5 py-1 rounded-md font-semibold ${isDarkMode ? "text-lime-400 bg-lime-500/10" : "text-lime-700 bg-lime-100"}`}>{ex.sets}s • {ex.reps}r • {ex.time}s</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -343,12 +354,14 @@ export default function Plan() {
             {/* EDIT MODAL */}
             {editModal && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
-                    <div className={`border w-full max-w-md p-8 rounded-3xl shadow-2xl animate-fadeIn relative overflow-hidden ${isDarkMode ? "bg-[#0a0a0a] border-white/10" : "bg-white border-gray-200"}`}>
+                    <div className={`border w-full max-w-md p-8 rounded-[2.5rem] shadow-2xl animate-fadeIn relative overflow-hidden ${isDarkMode ? "bg-[#0a0a0a] border-white/10" : "bg-white border-gray-200"}`}>
                         <div className="absolute top-[-20%] right-[-20%] w-48 h-48 bg-blue-500/20 rounded-full blur-[80px] pointer-events-none"></div>
 
                         <div className="flex justify-between items-center mb-6 relative z-10">
                             <h2 className={`text-2xl font-black tracking-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>Edit Workout</h2>
-                            <button onClick={() => setEditModal(false)} className={`transition-colors p-2 rounded-xl ${isDarkMode ? "text-gray-500 hover:text-white bg-white/5" : "text-gray-500 hover:text-gray-900 bg-gray-100"}`}>✖</button>
+                            <button onClick={() => setEditModal(false)} className={`transition-all p-3 rounded-xl ${isDarkMode ? "text-gray-400 hover:text-white bg-white/5 hover:bg-white/10" : "text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200"}`}>
+                                <FaTimes />
+                            </button>
                         </div>
 
                         <div className="space-y-4 relative z-10">
@@ -391,7 +404,7 @@ export default function Plan() {
                                     <input value={time} onChange={(e) => setTime(e.target.value)} placeholder="Time(s)" type="number" className={`w-1/3 p-3 rounded-xl outline-none border placeholder-gray-600 focus:border-blue-500 text-center ${isDarkMode ? "bg-white/5 text-white border-white/10" : "bg-gray-50 text-gray-900 border-gray-200"}`} />
                                 </div>
                                 <button onClick={addExercise} className={`w-full font-semibold py-2.5 rounded-xl border transition-all ${isDarkMode ? "bg-white/10 hover:bg-white/20 text-white border-white/10" : "bg-gray-100 hover:bg-gray-200 text-gray-800 border-gray-200"}`}>
-                                    + Add to List
+                                            <span className="flex items-center justify-center gap-2"><FaPlus /> Add to List</span>
                                 </button>
                             </div>
 
@@ -402,14 +415,14 @@ export default function Plan() {
                                         <div key={i} className={`flex justify-between items-center text-sm border-b pb-2 last:border-0 last:pb-0 ${isDarkMode ? "border-white/5" : "border-gray-200"}`}>
                                             <div>
                                                 <span className={`font-medium block ${isDarkMode ? "text-white" : "text-gray-800"}`}>{ex.name}</span>
-                                                <span className={`px-2 py-1 rounded-md mt-1 inline-block text-xs font-semibold ${isDarkMode ? "text-blue-400 bg-blue-500/10" : "text-blue-700 bg-blue-100"}`}>{ex.sets} sets • {ex.reps} reps • {ex.time}s</span>
+                                                <span className={`px-2.5 py-1 rounded-md mt-1.5 inline-block text-[11px] font-bold tracking-wide uppercase ${isDarkMode ? "text-blue-400 bg-blue-500/10" : "text-blue-700 bg-blue-100"}`}>{ex.sets} sets • {ex.reps} reps • {ex.time}s</span>
                                             </div>
                                             <button
                                                 onClick={() => deleteExercise(i)}
-                                                className="text-red-500 hover:text-red-400 bg-red-500/10 p-2 rounded-lg transition-colors"
+                                                className="text-red-500 hover:text-red-600 bg-red-500/10 hover:bg-red-500/20 p-2.5 rounded-xl transition-all"
                                                 title="Remove exercise"
                                             >
-                                                ✖
+                                                <FaTrash />
                                             </button>
                                         </div>
                                     ))}

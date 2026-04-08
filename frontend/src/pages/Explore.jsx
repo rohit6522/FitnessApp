@@ -21,29 +21,79 @@ export default function Explore() {
     ]
 
     const exercises = [
+        //Chest
         { name: "Bench Press", type: "strength", level: "Intermediate", muscle: "Chest", desc: "Barbell chest press", tip: "Keep feet flat" },
         { name: "Push Ups", type: "strength", level: "Beginner", muscle: "Chest", desc: "Bodyweight chest exercise", tip: "Keep body straight" },
 
+         { name: "Incline Dumbbell Press", type: "strength", level: "Intermediate", muscle: "Chest", desc: "Targets upper chest", tip: "Set bench to 30-45 degrees" },
+        { name: "Cable Crossovers", type: "strength", level: "Advanced", muscle: "Chest", desc: "Constant tension chest fly", tip: "Squeeze at the center" },
+
+
+        // Back
         { name: "Pull Ups", type: "strength", level: "Intermediate", muscle: "Back", desc: "Bodyweight back exercise", tip: "Full range motion" },
         { name: "Deadlift", type: "strength", level: "Advanced", muscle: "Back", desc: "Compound lift", tip: "Keep bar close" },
+
+         { name: "Barbell Rows", type: "strength", level: "Intermediate", muscle: "Back", desc: "Thickens the mid-back", tip: "Keep back straight and parallel to floor" },
+        { name: "Lat Pulldowns", type: "strength", level: "Beginner", muscle: "Back", desc: "Machine back exercise", tip: "Pull to your upper chest" },
+
+
+        // Shoulders
 
         { name: "Shoulder Press", type: "strength", level: "Intermediate", muscle: "Shoulders", desc: "Overhead press", tip: "Brace core" },
         { name: "Lateral Raises", type: "strength", level: "Beginner", muscle: "Shoulders", desc: "Dumbbell raise", tip: "Lift to shoulder height" },
 
+        { name: "Front Raises", type: "strength", level: "Beginner", muscle: "Shoulders", desc: "Isolates front delts", tip: "Don't swing your body" },
+        { name: "Face Pulls", type: "strength", level: "Intermediate", muscle: "Shoulders", desc: "Rear delt and posture", tip: "Pull towards your nose" },
+
+
+
+        // Arms
+
         { name: "Bicep Curls", type: "strength", level: "Beginner", muscle: "Arms", desc: "Dumbbell curls", tip: "Keep elbows tight" },
         { name: "Tricep Dips", type: "strength", level: "Intermediate", muscle: "Arms", desc: "Bodyweight dips", tip: "Control movement" },
 
+                { name: "Hammer Curls", type: "strength", level: "Beginner", muscle: "Arms", desc: "Builds brachialis", tip: "Neutral grip throughout" },
+        { name: "Tricep Pushdowns", type: "strength", level: "Beginner", muscle: "Arms", desc: "Cable tricep extension", tip: "Lock elbows at your sides" },
+
+
+
+        //Legs
+        
         { name: "Squats", type: "strength", level: "Intermediate", muscle: "Legs", desc: "Barbell squat", tip: "Keep knees aligned" },
         { name: "Lunges", type: "strength", level: "Beginner", muscle: "Legs", desc: "Walking lunges", tip: "Step forward properly" },
 
+         { name: "Leg Press", type: "strength", level: "Beginner", muscle: "Legs", desc: "Machine leg press", tip: "Don't lock your knees" },
+        { name: "Calf Raises", type: "strength", level: "Beginner", muscle: "Legs", desc: "Builds lower legs", tip: "Pause at the top" },
+        { name: "Romanian Deadlift", type: "strength", level: "Intermediate", muscle: "Legs", desc: "Hamstring focus", tip: "Hinge at the hips" },
+
+
+
+        //Core
+        
         { name: "Plank", type: "strength", level: "Beginner", muscle: "Core", desc: "Core hold", tip: "Keep hips level" },
         { name: "Russian Twists", type: "strength", level: "Intermediate", muscle: "Core", desc: "Core rotation", tip: "Engage abs" },
+
+         { name: "Hanging Leg Raises", type: "strength", level: "Advanced", muscle: "Core", desc: "Lower ab focus", tip: "Avoid swinging" },
+        { name: "Ab Wheel Rollout", type: "strength", level: "Advanced", muscle: "Core", desc: "Intense core stretch", tip: "Keep lower back rounded slightly" },
+
+
+        // Full Body
 
         { name: "Burpees", type: "hiit", level: "Intermediate", muscle: "Full Body", desc: "Explosive exercise", tip: "Move fast" },
         { name: "Mountain Climbers", type: "hiit", level: "Beginner", muscle: "Full Body", desc: "Dynamic plank", tip: "Keep core tight" },
 
+          { name: "Kettlebell Swings", type: "hiit", level: "Intermediate", muscle: "Full Body", desc: "Hip hinge power", tip: "Drive with your hips, not arms" },
+        { name: "Thrusters", type: "hiit", level: "Advanced", muscle: "Full Body", desc: "Squat to press", tip: "Use momentum from the squat" },
+
+        //Cardio
+
         { name: "Running", type: "cardio", level: "Beginner", muscle: "Cardio", desc: "Steady running", tip: "Maintain pace" },
-        { name: "Cycling", type: "cardio", level: "Beginner", muscle: "Cardio", desc: "Bike workout", tip: "Adjust seat height" }
+        { name: "Cycling", type: "cardio", level: "Beginner", muscle: "Cardio", desc: "Bike workout", tip: "Adjust seat height" },
+
+        { name: "Jump Rope", type: "cardio", level: "Beginner", muscle: "Cardio", desc: "High calorie burn", tip: "Stay on your toes" },
+        { name: "Rowing", type: "cardio", level: "Intermediate", muscle: "Cardio", desc: "Full body cardio", tip: "Push with legs, then pull" },
+        { name: "Stair Master", type: "cardio", level: "Intermediate", muscle: "Cardio", desc: "Continuous climbing", tip: "Don't lean on the rails" }
+    
     ]
     
 
@@ -70,7 +120,7 @@ export default function Explore() {
     }
 
     return (
-        <div className={`min-h-screen relative overflow-hidden p-6 transition-colors duration-500 ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
+        <div className={`min-h-screen relative overflow-hidden p-4 md:p-6 transition-colors duration-500 ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
             {/* Glowing Orbs for Aesthetic */}
             <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-lime-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
             <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>

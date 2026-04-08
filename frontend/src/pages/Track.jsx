@@ -95,7 +95,7 @@ export default function Track() {
     }
 
     return (
-        <div className={`min-h-screen relative overflow-hidden p-6 transition-colors duration-500 ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
+        <div className={`min-h-screen relative overflow-hidden p-4 md:p-6 transition-colors duration-500 ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
             {/* Glowing Orbs for Aesthetic */}
             <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-lime-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
             <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
@@ -152,7 +152,7 @@ export default function Track() {
 
                 <div className="space-y-4">
                     {logs.length === 0 ? (
-                        <div className={`backdrop-blur-xl border border-dashed p-12 text-center rounded-3xl shadow-lg transition-all ${isDarkMode ? "bg-white/5 border-white/10" : "bg-white border-gray-300"}`}>
+                        <div className={`backdrop-blur-xl border border-dashed p-8 md:p-12 text-center rounded-3xl shadow-lg transition-all ${isDarkMode ? "bg-white/5 border-white/10" : "bg-white border-gray-300"}`}>
                             <p className={`font-medium text-lg ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
                                 No workouts logged yet. Start tracking your progress!
                             </p>
