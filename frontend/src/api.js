@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export const API = axios.create({
-    baseURL: "http://localhost:5000/api"  
+    baseURL: "https://fitnessapp-backend-n0qo.onrender.com/api"  
 })
 
 API.interceptors.request.use((req) => {

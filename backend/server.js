@@ -7,7 +7,17 @@ const connectDB = require("./config/db.js")
 
 const app = express()
 
-app.use(cors())
+// change
+
+app.use(cors({
+    origin:[
+        "http://localhost:5173",
+        "https://https://fitnessapp-frontend-xiht.onrender.com"
+    ],
+    credentials: true
+
+}))
+
 app.use(express.json())
 
 connectDB()
