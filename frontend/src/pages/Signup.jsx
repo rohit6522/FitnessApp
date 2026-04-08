@@ -55,7 +55,12 @@ export default function Signup() {
         
     } catch (error) {
         console.error("Google Sign-In Error:", error);
-        toast.error("Failed to authenticate with Google ❌");
+        const errorMsg = error.response?.data?.message || error.message || "Failed to authenticate";
+        if (error.code === 'auth/popup-closed-by-user') {
+             toast.error("Google sign-in was cancelled.");
+        } else {
+             toast.error(`Google Error: ${errorMsg} ❌`);
+        }
     }
 };
 
