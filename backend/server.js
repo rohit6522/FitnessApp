@@ -12,7 +12,7 @@ const app = express()
 app.use(cors({
     origin:[
         "http://localhost:5173",
-        "https://https://fitnessapp-frontend-xiht.onrender.com"
+        "https://fitnessapp-frontend-xiht.onrender.com"
     ],
     credentials: true
 }))
