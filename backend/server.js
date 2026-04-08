@@ -15,7 +15,6 @@ app.use(cors({
         "https://https://fitnessapp-frontend-xiht.onrender.com"
     ],
     credentials: true
-
 }))
 
 app.use(express.json())
