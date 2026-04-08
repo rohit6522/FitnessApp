@@ -5,6 +5,45 @@ const nodemailer = require("nodemailer")
 const otpGenerator = require("otp-generator")
 
 
+exports.googleAuth = async (req, res) => {
+    try {
+        const { name, email, googleId, profilePicture } = req.body;
+
+        // Check if user already exists
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            // Create a new user if they don't exist
+            // Note: Since it's a Google login, we don't have a password. 
+            // You can generate a random password or make the password field optional in your Mongoose Schema
+            user = new User({
+                name,
+                email,
+                password: googleId + process.env.JWT_SECRET, // Dummy password for Google users
+                profilePicture
+            });
+            await user.save();
+        }
+
+        // Generate JWT Token
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+        res.status(200).json({
+            success: true,
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error during Google Auth" });
+    }
+};
+
+
 
 exports.signup = async (req, res) => {
     try {

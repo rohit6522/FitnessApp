@@ -2,6 +2,10 @@ import { useState } from "react"
 import { API } from "../api"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
+import { auth, googleProvider } from "../firebase";
+import { signInWithPopup } from "firebase/auth";
+import { FcGoogle } from "react-icons/fc";
+
 
 export default function Signup() {
     const [form, setForm] = useState({ name: "", email: "", password: "" })
@@ -27,10 +31,38 @@ export default function Signup() {
         }
     }
 
+    const handleGoogleSignIn = async () => {
+    try {
+        // 1. Show Google Popup
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+        
+        // 2. Send Google User Data to your Backend
+        const response = await API.post("/auth/google", {
+            name: user.displayName,
+            email: user.email,
+            googleId: user.uid,
+            profilePicture: user.photoURL,
+        });
+
+        // 3. Save your Backend's JWT token and redirect
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        toast.success("Google Signup successful! 🚀");
+        setTimeout(() => {
+            window.location.href = "/dashboard";
+        }, 500);
+        
+    } catch (error) {
+        console.error("Google Sign-In Error:", error);
+        toast.error("Failed to authenticate with Google ❌");
+    }
+};
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-950 relative overflow-hidden">
             {/* Background Image with Overlay */}
-            <div 
+            <div
                 className="absolute inset-0 z-0 bg-cover bg-center"
                 style={{ backgroundImage: "url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=2070&auto=format&fit=crop')" }}
             >
@@ -41,22 +73,22 @@ export default function Signup() {
             <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-lime-500/20 rounded-full blur-[120px] animate-pulse"></div>
             <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: "1s" }}></div>
 
-            <div className="z-10 flex w-full max-w-[1000px] h-[650px] mx-4 rounded-3xl overflow-hidden shadow-2xl bg-white/5 backdrop-blur-xl border border-white/10 transition-all duration-500">
+            <div className="z-10 flex w-full max-w-[900px] h-auto md:min-h-[580px] mx-4 rounded-3xl overflow-hidden shadow-2xl bg-white/5 backdrop-blur-xl border border-white/10 transition-all duration-500">
 
                 {/* LEFT FORM */}
-                <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center relative">
+                <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-center relative">
                     <div className="max-w-md w-full mx-auto animate-fadeIn">
-                        
-                        <div className="mb-8 text-center md:text-left">
-                            <h1 className="text-4xl font-black text-white mb-2 tracking-tighter">
+
+                        <div className="mb-5 text-center md:text-left">
+                            <h1 className="text-3xl md:text-4xl font-black text-white mb-1 tracking-tight whitespace-nowrap">
                                 FIT<span className="text-lime-500">NESS</span>
                             </h1>
                             <p className="text-gray-400 font-medium tracking-wide text-sm">Join the elite. Start your journey.</p>
                         </div>
 
-                        <h2 className="text-2xl font-bold text-white mb-6 text-center md:text-left">Sign Up</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4 text-center md:text-left">Sign Up</h2>
 
-                        <form onSubmit={handleSubmit} className="space-y-4">
+                        <form onSubmit={handleSubmit} className="space-y-3">
 
                             <div className="space-y-1.5">
                                 <label className="text-sm font-semibold text-gray-300">Full Name</label>
@@ -66,7 +98,7 @@ export default function Signup() {
                                     placeholder="Enter your full name"
                                     onChange={handleChange}
                                     required
-                                    className="w-full p-3.5 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
+                                    className="w-full p-3 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
                                 />
                             </div>
 
@@ -78,7 +110,7 @@ export default function Signup() {
                                     placeholder="Enter your email"
                                     onChange={handleChange}
                                     required
-                                    className="w-full p-3.5 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
+                                    className="w-full p-3 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
                                 />
                             </div>
 
@@ -90,28 +122,36 @@ export default function Signup() {
                                     placeholder="••••••••"
                                     onChange={handleChange}
                                     required
-                                    className="w-full p-3.5 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
+                                    className="w-full p-3 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
                                 />
                             </div>
 
-                            <button 
+                            <button
                                 disabled={loading}
-                                className="w-full bg-gradient-to-r from-lime-500 to-emerald-500 text-black font-extrabold text-lg py-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(132,204,22,0.4)] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed mt-2"
+                                className="w-full bg-gradient-to-r from-lime-500 to-emerald-500 text-black font-extrabold text-lg py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(132,204,22,0.4)] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed mt-2"
                             >
                                 {loading ? "Creating Account..." : "SIGN UP"}
-                        </button>
+                            </button>
+                            
+                            <button 
+                                type="button" 
+                                onClick={handleGoogleSignIn} 
+                                className="w-full bg-white text-black font-extrabold text-lg py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] active:scale-95 flex items-center justify-center gap-3 mt-3"
+                            >   
+                                <FcGoogle className="text-2xl" /> Continue with Google 
+                            </button>
 
-                            <p className="text-sm text-center text-gray-400 pt-4">
-                            Already have an account?{" "}
+                            <p className="text-sm text-center text-gray-400 pt-2">
+                                Already have an account?{" "}
                                 <span
                                     onClick={() => navigate("/login")}
                                     className="text-lime-500 font-semibold cursor-pointer hover:underline"
                                 >
                                     Log In
-                            </span>
-                        </p>
+                                </span>
+                            </p>
 
-                            <div className="flex justify-center mt-4">
+                            <div className="flex justify-center mt-3">
                                 <button
                                     type="button"
                                     onClick={() => navigate("/")}
@@ -120,7 +160,7 @@ export default function Signup() {
                                     <span className="group-hover:-translate-x-1 transition-transform">←</span> Back to Dashboard
                                 </button>
                             </div>
-                    </form>
+                        </form>
                     </div>
                 </div>
 
@@ -133,7 +173,7 @@ export default function Signup() {
                     />
                     {/* Gradient Overlay for blending */}
                     <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent"></div>
-                    
+
                     {/* Motivational Quote */}
                     <div className="absolute bottom-12 right-8 left-12 p-6 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 shadow-xl">
                         <p className="text-white text-lg font-medium italic leading-relaxed">"You won't get my kind of body if you eat junk food."</p>

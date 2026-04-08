@@ -2,6 +2,9 @@ import { useState } from "react"
 import { API } from "../api"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
+import { auth, googleProvider } from "../firebase";
+import { signInWithPopup } from "firebase/auth";
+import { FcGoogle } from "react-icons/fc";
 
 export default function Login() {
     const [form, setForm] = useState({ email: "", password: "" })
@@ -33,8 +36,37 @@ export default function Login() {
         }
     }
 
+    const handleGoogleSignIn = async () => {
+    try {
+        // 1. Show Google Popup
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+        
+        // 2. Send Google User Data to your Backend
+        const response = await API.post("/auth/google", {
+            name: user.displayName,
+            email: user.email,
+            googleId: user.uid,
+            profilePicture: user.photoURL,
+        });
+
+        // 3. Save your Backend's JWT token and redirect
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        toast.success("Google Login successful! 🚀");
+        setTimeout(() => {
+            window.location.href = "/dashboard";
+        }, 500);
+        
+    } catch (error) {
+        console.error("Google Sign-In Error:", error);
+        toast.error("Failed to authenticate with Google ❌");
+    }
+};
+
+
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-950 relative overflow-hidden py-10">
+        <div className="min-h-screen flex items-center justify-center bg-gray-950 relative overflow-hidden">
             {/* Background Image with Overlay */}
             <div 
                 className="absolute inset-0 z-0 bg-cover bg-center"
@@ -47,22 +79,22 @@ export default function Login() {
             <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-lime-500/20 rounded-full blur-[120px] animate-pulse"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-emerald-500/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: "1s" }}></div>
 
-            <div className="z-10 flex w-full max-w-[1000px] min-h-[600px] h-auto mx-4 rounded-3xl overflow-hidden shadow-2xl bg-white/5 backdrop-blur-xl border border-white/10 transition-all duration-500">
+            <div className="z-10 flex w-full max-w-[900px] h-auto md:h-[550px] mx-4 rounded-3xl overflow-hidden shadow-2xl bg-white/5 backdrop-blur-xl border border-white/10 transition-all duration-500">
 
                 {/* LEFT FORM */}
-                <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center relative">
+                <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-center relative">
                     <div className="max-w-md w-full mx-auto animate-fadeIn">
                         
-                        <div className="mb-8 text-center md:text-left">
-                            <h1 className="text-4xl font-black text-white mb-2 tracking-tighter">
+                        <div className="mb-5 text-center md:text-left">
+                            <h1 className="text-3xl font-black text-white mb-1 tracking-tighter">
                                 FIT<span className="text-lime-500">NESS</span>
                             </h1>
                             <p className="text-gray-400 font-medium tracking-wide text-sm">Push your limits. Track your gains.</p>
                         </div>
 
-                        <h2 className="text-2xl font-bold text-white mb-6 text-center md:text-left">Log In</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4 text-center md:text-left">Log In</h2>
 
-                        <form onSubmit={handleSubmit} className="space-y-5">
+                        <form onSubmit={handleSubmit} className="space-y-3">
 
                             <div className="space-y-1.5">
                                 <label className="text-sm font-semibold text-gray-300">Email Address</label>
@@ -72,7 +104,7 @@ export default function Login() {
                                     placeholder="Enter your email"
                                     onChange={handleChange}
                                     required
-                                    className="w-full p-3.5 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
+                                    className="w-full p-3 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
                                 />
                             </div>
 
@@ -92,18 +124,26 @@ export default function Login() {
                                     placeholder="••••••••"
                                     onChange={handleChange}
                                     required
-                                    className="w-full p-3.5 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
+                                    className="w-full p-3 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
                                 />
                             </div>
 
                             <button 
                                 disabled={loading}
-                                className="w-full bg-gradient-to-r from-lime-500 to-emerald-500 text-black font-extrabold text-lg py-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(132,204,22,0.4)] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed mt-2"
+                                className="w-full bg-gradient-to-r from-lime-500 to-emerald-500 text-black font-extrabold text-lg py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(132,204,22,0.4)] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed mt-2"
                             >
                                 {loading ? "Authenticating..." : "LOG IN"}
                         </button>
 
-                            <p className="text-sm text-center text-gray-400 pt-4">
+                    <button 
+                        type="button" 
+                        onClick={handleGoogleSignIn} 
+                        className="w-full bg-white text-black font-extrabold text-lg py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] active:scale-95 flex items-center justify-center gap-3 mt-3"
+                    >
+                        <FcGoogle className="text-2xl" /> Continue with Google 
+                    </button>
+
+                            <p className="text-sm text-center text-gray-400 pt-2">
                             Don't have an account?{" "}
                             <span
                                 onClick={() => navigate("/signup")}
@@ -113,7 +153,7 @@ export default function Login() {
                             </span>
                         </p>
 
-                            <div className="flex justify-center mt-6">
+                            <div className="flex justify-center mt-3">
                                 <button
                                     type="button"
                                     onClick={() => navigate("/")}
