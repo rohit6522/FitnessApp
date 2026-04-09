@@ -2,6 +2,7 @@ import { useState } from "react"
 import { API } from "../api"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
+
 import { auth, googleProvider } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
@@ -63,6 +64,7 @@ export default function Signup() {
         }
     }
 };
+
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-950 relative overflow-hidden">
@@ -137,7 +139,7 @@ export default function Signup() {
                             >
                                 {loading ? "Creating Account..." : "SIGN UP"}
                             </button>
-                            
+                             
                             <button 
                                 type="button" 
                                 onClick={handleGoogleSignIn} 
