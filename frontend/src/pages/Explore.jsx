@@ -1,11 +1,13 @@
 import Navbar from "../components/Navbar"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 export default function Explore() {
 
     const [search, setSearch] = useState("")
     const [filter, setFilter] = useState("All Muscles")
     const [showDropdown, setShowDropdown] = useState(false)
+    const navigate = useNavigate()
     const [isDarkMode, setIsDarkMode] = useState(() => {
         const savedTheme = localStorage.getItem("theme");
         return savedTheme ? savedTheme === "dark" : true;
@@ -221,6 +223,12 @@ export default function Explore() {
                                         <p className="text-lime-500 text-xs font-semibold uppercase tracking-wider mb-1">💡 Pro Tip</p>
                                         <p className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>{ex.tip}</p>
                                     </div>
+                                    <button
+                                        onClick={() => navigate("/plan", { state: { exercise: ex } })}
+                                        className={`w-full mt-4 font-bold px-4 py-2.5 rounded-xl transition-all duration-300 border shadow-sm flex items-center justify-center gap-2 hover:scale-105 active:scale-95 ${isDarkMode ? "bg-white/10 text-white border-white/20 hover:bg-lime-500 hover:text-black hover:border-lime-500" : "bg-white text-gray-800 border-gray-200 hover:bg-lime-500 hover:text-black hover:border-lime-500"}`}
+                                    >
+                                        + Add to Plan
+                                    </button>
                                 </div>
                             </div>
                         ))

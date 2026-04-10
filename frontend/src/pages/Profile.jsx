@@ -20,7 +20,18 @@ export default function Profile() {
         return savedTheme ? savedTheme === "dark" : true;
     })
 
-    const [time, setTime] = useState("")
+    const [time, setTime] = useState(localStorage.getItem("workoutReminderTime") || "")
+    const [savedTime, setSavedTime] = useState(localStorage.getItem("workoutReminderTime") || "")
+
+    // Helper function to convert 24-hour time to 12-hour AM/PM format
+    const formatAMPM = (timeStr) => {
+        if (!timeStr) return "";
+        let [hours, minutes] = timeStr.split(':');
+        hours = parseInt(hours, 10);
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12; // Converts "00" or "12" to "12"
+        return `${hours}:${minutes} ${ampm}`;
+    };
 
     const setReminder = async () => {
         if (!time) {
@@ -39,7 +50,8 @@ export default function Profile() {
             // Clear the "already notified today" flag so it can ring again today!
             localStorage.removeItem("lastNotifiedDate") 
             
-            toast.success(`Daily reminder set for ${time} ✅`)
+            setSavedTime(time)
+            toast.success(`Daily reminder set for ${formatAMPM(time)} ✅`)
         } catch (err) {
             toast.error(err.response?.data?.message || "Failed to set reminder ❌")
         }
@@ -155,6 +167,11 @@ export default function Profile() {
                         </h2>
                         <p className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
                             Get a daily email alert so you never miss a workout!
+                            {savedTime && (
+                                <span className="block mt-1 font-bold text-blue-500 bg-blue-500/10 w-fit px-3 py-1 rounded-lg border border-blue-500/20">
+                                    Active Alarm: {formatAMPM(savedTime)}
+                                </span>
+                            )}
                         </p>
                     </div>
 

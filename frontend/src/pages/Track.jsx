@@ -38,7 +38,7 @@ export default function Track() {
     const fetchLogs = async () => {
         try {
             const res = await API.get(`/track/${user._id || user.id}`)
-            setLogs(res.data)
+            setLogs(Array.isArray(res.data) ? res.data : [])
         } catch (err) {
             console.log(err)
         }
@@ -46,6 +46,11 @@ export default function Track() {
 
     // ADD LOG
     const addLog = async () => {
+        if (!form.workoutName || !form.duration || !form.calories) {
+            toast.error("Please fill all fields ⚠️")
+            return
+        }
+        
         try {
             await API.post("/track", {
                 ...form,
@@ -55,8 +60,8 @@ export default function Track() {
 
             toast.success("Workout Logged ✅")
             setShow(false)
+            setForm({ workoutName: "", duration: "", calories: "" })
             fetchLogs()
-            window.location.reload()  
         } catch (err) {
             toast.error("Error ❌")
         }
@@ -65,10 +70,16 @@ export default function Track() {
     // 📊 GRAPH DATA
     const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
 
-    const chartData = days.map(day => {
-        const count = logs.filter(l =>
-            new Date(l.date).toLocaleString("en-US", { weekday: "short" }) === day
-        ).length
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    const chartData = days.map((day, index) => {
+        const count = logs.filter(l => {
+            const logDate = new Date(l.date);
+            return logDate >= startOfWeek && logDate.getDay() === index;
+        }).length
 
         return { day, workouts: count }
     })
@@ -88,9 +99,6 @@ export default function Track() {
         }
         return null
     }
-
-    // Filter logs to only show today's workouts in the list
-    const todayLogs = logs.filter(l => new Date(l.date).toDateString() === new Date().toDateString())
 
     const toggleTheme = () => {
         setIsDarkMode(!isDarkMode);
@@ -136,23 +144,23 @@ export default function Track() {
                     </div>
                 </div>
 
-                {/* TODAY'S WORKOUTS */}
-                <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Today's <span className="text-emerald-500">Workouts</span></h2>
+                {/* RECENT */}
+                <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Recent <span className="text-emerald-500">Workouts</span></h2>
 
                 <div className="space-y-4">
-                    {todayLogs.length === 0 ? (
+                    {logs.length === 0 ? (
                         <div className={`backdrop-blur-xl border border-dashed p-8 md:p-12 text-center rounded-3xl shadow-lg transition-all ${isDarkMode ? "bg-white/5 border-white/10" : "bg-white border-gray-300"}`}>
                             <p className={`font-medium text-lg ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
-                                No workouts logged today. Start tracking your progress!
+                                No workouts logged yet. Start tracking your progress!
                             </p>
                         </div>
                     ) : (
-                        todayLogs.map(l => (
+                        logs.map(l => (
                             <div key={l._id} className={`backdrop-blur-xl border p-5 rounded-2xl shadow-lg flex justify-between items-center transition-all duration-300 hover:-translate-y-1 ${isDarkMode ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-white border-gray-200 hover:bg-gray-50"}`}>
                                 <div>
                                     <p className={`text-xl font-bold mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{l.workoutName}</p>
                                     <p className={`text-sm font-medium inline-block px-2 py-0.5 rounded-md ${isDarkMode ? "text-lime-500 bg-lime-500/10" : "text-lime-700 bg-lime-100"}`}>
-                                        {new Date(l.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        {new Date(l.date).toLocaleDateString()}
                                     </p>
                                 </div>
                                 <div className="text-right">
@@ -181,6 +189,7 @@ export default function Track() {
                             <div className="space-y-1.5">
                                 <label className={`text-xs font-semibold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Workout Name</label>
                                 <input
+                                    value={form.workoutName}
                                     placeholder="e.g., Upper Body Power"
                                     className={`w-full p-3.5 rounded-xl outline-none border transition-all focus:border-lime-500 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
                                     onChange={e => setForm({ ...form, workoutName: e.target.value })}
@@ -191,6 +200,7 @@ export default function Track() {
                                 <label className={`text-xs font-semibold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Duration (min)</label>
                                 <input
                                     type="number"
+                                    value={form.duration}
                                     placeholder="45"
                                     className={`w-full p-3.5 rounded-xl outline-none border transition-all focus:border-lime-500 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
                                     onChange={e => setForm({ ...form, duration: e.target.value })}
@@ -201,6 +211,7 @@ export default function Track() {
                                 <label className={`text-xs font-semibold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Calories Burned</label>
                                 <input
                                     type="number"
+                                    value={form.calories}
                                     placeholder="300"
                                     className={`w-full p-3.5 rounded-xl outline-none border transition-all focus:border-lime-500 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
                                     onChange={e => setForm({ ...form, calories: e.target.value })}

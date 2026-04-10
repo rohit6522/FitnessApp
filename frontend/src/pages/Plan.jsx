@@ -3,13 +3,14 @@ import { useState, useEffect } from "react"
 import { API } from "../api"
 import { toast } from "sonner"
 
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { FaPlus, FaEdit, FaTrash, FaDumbbell, FaCheckCircle, FaTimes, FaCalendarAlt } from "react-icons/fa"
-const user = JSON.parse(localStorage.getItem("user"))
+
 
 export default function Plan() {
     
     const navigate = useNavigate()
+    const location = useLocation()
 
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
@@ -42,6 +43,15 @@ export default function Plan() {
         }
         fetch()
     }, [activeDay])
+
+    // HANDLE REDIRECT FROM EXPLORE
+    useEffect(() => {
+        if (location.state?.exercise) {
+            setExerciseName(location.state.exercise.name)
+            setShowModal(true)
+            navigate(location.pathname, { replace: true, state: {} }) // Clear state to prevent reopening on reload
+        }
+    }, [location, navigate])
 
     // ADD EXERCISE
     const addExercise = () => {
@@ -193,6 +203,15 @@ export default function Plan() {
                         </button>
                     </div>
                 ) : (
+                <>
+                    <div className="flex justify-end mb-6">
+                        <button
+                            onClick={() => setShowModal(true)}
+                            className={`font-bold px-6 py-2.5 rounded-xl border transition-all duration-300 hover:scale-105 hover:bg-lime-500 hover:text-black hover:border-lime-500 shadow-sm flex items-center gap-2 ${isDarkMode ? "bg-white/10 text-white border-white/20" : "bg-white text-gray-800 border-gray-200"}`}
+                        >
+                            <FaPlus /> Add Another Workout
+                        </button>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {workouts.map(w => (
                             <div key={w._id} className={`backdrop-blur-xl border p-6 md:p-8 rounded-[2rem] shadow-lg relative overflow-hidden group transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(132,204,22,0.3)] ${isDarkMode ? "bg-white/5 border-white/10 hover:border-lime-500/30" : "bg-white border-gray-200 hover:border-lime-500/50"}`}>
@@ -228,10 +247,10 @@ export default function Plan() {
                                 <div className="space-y-3 relative z-10">
                                     {w.exercises?.map((ex, i) => (
                                         <div key={i} className={`flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 rounded-xl border transition-colors ${isDarkMode ? "bg-black/40 border-white/5 hover:border-white/10" : "bg-gray-50 border-gray-200 hover:bg-white hover:shadow-sm"}`}>
-                                            <p className={`font-semibold flex items-center gap-3 mb-2 sm:mb-0 ${isDarkMode ? "text-white" : "text-gray-800"}`}>
+                                            <div className={`font-semibold flex items-center gap-3 mb-2 sm:mb-0 ${isDarkMode ? "text-white" : "text-gray-800"}`}>
                                                 <div className={`p-2 rounded-lg ${isDarkMode ? "bg-lime-500/20 text-lime-400" : "bg-lime-100 text-lime-600"}`}><FaDumbbell className="text-sm" /></div>
                                                 {ex.name}
-                                            </p>
+                                            </div>
                                             <p className={`text-sm font-bold px-3 py-1.5 rounded-lg text-center ${isDarkMode ? "text-lime-400 bg-lime-500/10" : "text-lime-700 bg-lime-100"}`}>
                                                 {ex.sets} sets • {ex.reps} reps • {ex.time}s
                                             </p>
@@ -241,6 +260,7 @@ export default function Plan() {
                             </div>
                         ))}
                     </div>
+                </>
                 )}
             </div>
 
@@ -429,28 +449,7 @@ export default function Plan() {
 
 
         </div>
-
-            
-        
+ 
     )
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

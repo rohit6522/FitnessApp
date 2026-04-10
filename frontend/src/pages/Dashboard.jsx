@@ -59,16 +59,24 @@ export default function Dashboard() {
     }, [])
 
     useEffect(() => {
-    const fetchStats = async () => {
-        const user = JSON.parse(localStorage.getItem("user"))
-        if (!user) return
+        const fetchStats = async () => {
+            const user = JSON.parse(localStorage.getItem("user"))
+            if (!user) return
 
-        const res = await API.get(`/track/stats/${user._id || user.id}`)
-        setStats(res.data)
-    }
+            try {
+                const res = await API.get(`/track/stats/${user._id || user.id}`)
+                setStats(res.data)
+            } catch (err) {
+                console.error("Error fetching stats:", err)
+            }
+        }
 
-    fetchStats()
-}, [])
+        fetchStats()
+        
+        // Poll every 5 seconds to keep stats updated in real-time
+        const intervalId = setInterval(fetchStats, 5000)
+        return () => clearInterval(intervalId)
+    }, [])
 
     // Typing Effect for User Name
     useEffect(() => {
