@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { FaBars, FaTimes } from "react-icons/fa"
 
-export default function Navbar({ isDarkMode = true }) {
+export default function Navbar({ isDarkMode = true, toggleTheme }) {
     const navigate = useNavigate()
     const [isOpen, setIsOpen] = useState(false)
     const token = localStorage.getItem("token")
@@ -13,6 +13,8 @@ export default function Navbar({ isDarkMode = true }) {
         localStorage.removeItem("user")
         window.location.href = "/"
     }
+
+        
 
     return (
         <div className={`p-4 backdrop-blur-xl border shadow-2xl rounded-2xl mb-6 relative z-50 transition-colors duration-500 ${isDarkMode ? "bg-[#0a0a0a]/80 border-white/10" : "bg-white/80 border-gray-200"}`}>
@@ -26,7 +28,16 @@ export default function Navbar({ isDarkMode = true }) {
                 </div>
 
                 {/* MOBILE HAMBURGER BUTTON */}
-                <div className="md:hidden flex items-center">
+                <div className="md:hidden flex items-center gap-3">
+                    {toggleTheme && (
+                        <button
+                            onClick={toggleTheme}
+                            title="Toggle Theme"
+                            className={`p-2 rounded-full font-bold transition-all duration-300 border shadow-sm flex items-center justify-center ${isDarkMode ? "bg-white/10 text-yellow-300 border-white/20 hover:bg-white/20" : "bg-white text-indigo-500 border-gray-300 hover:bg-gray-100"}`}
+                        >
+                            {isDarkMode ? "☀️" : "🌙"}
+                        </button>
+                    )}
                     <button onClick={() => setIsOpen(!isOpen)} className={`p-2 rounded-xl transition-all ${isDarkMode ? "text-white hover:bg-white/10" : "text-gray-900 hover:bg-gray-100"}`}>
                         {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
                     </button>
@@ -58,6 +69,16 @@ export default function Navbar({ isDarkMode = true }) {
 
                 {/* DESKTOP RIGHT: LOGOUT & USER */}
                 <div className="hidden md:flex w-1/3 justify-end items-center gap-4">
+                    {toggleTheme && (
+                        <button
+                            onClick={toggleTheme}
+                            title="Toggle Theme"
+                            className={`p-2.5 rounded-full font-bold transition-all duration-300 border shadow-sm flex items-center justify-center hover:scale-110 ${isDarkMode ? "bg-white/10 text-yellow-300 border-white/20 hover:bg-white/20" : "bg-white text-indigo-500 border-gray-300 hover:bg-gray-100"}`}
+                        >
+                            {isDarkMode ? "☀️" : "🌙"}
+                        </button>
+                    )}
+                    
                     {!token ? (
                         <Link
                             to="/login"

@@ -148,21 +148,7 @@ export default function Plan() {
             <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
 
             <div className="max-w-6xl mx-auto relative z-10">
-                <Navbar isDarkMode={isDarkMode} />
-
-                {/* THEME TOGGLE */}
-                <div className="flex justify-end mb-4 mt-2">
-                    <button
-                        onClick={toggleTheme}
-                        className={`px-5 py-2.5 rounded-xl font-bold transition-all duration-300 border shadow-sm flex items-center gap-2 ${
-                            isDarkMode
-                                ? "bg-white/10 text-white border-white/20 hover:bg-white/20"
-                                : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
-                        }`}
-                    >
-                        {isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-                    </button>
-                </div>
+                <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
 
                 {/* HEADER */}
                 <div className="mb-10">

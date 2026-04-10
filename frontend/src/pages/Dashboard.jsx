@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { API } from "../api"
 import { FaFire, FaCalendarCheck, FaBolt, FaClipboardList, FaSearch } from "react-icons/fa"
 import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 
 const MOTIVATIONAL_QUOTES = [
     "Ready to crush your goals? Track your progress and push your limits today!",
@@ -197,6 +198,27 @@ export default function Dashboard() {
         return () => { isMounted = false; };
     }, []);
 
+    // In-App Notification Checker
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const reminderTime = localStorage.getItem("workoutReminderTime");
+            if (reminderTime) {
+                const now = new Date();
+                const currentTime = now.toTimeString().slice(0, 5); // Gets "HH:mm"
+                const lastNotified = localStorage.getItem("lastNotifiedDate");
+                const today = now.toDateString();
+
+                if (currentTime === reminderTime && lastNotified !== today) {
+                    toast.success("⏰ Time to Crush Your Workout!", {
+                        description: "Your daily reminder is ringing! Let's get to work 💪"
+                    });
+                    localStorage.setItem("lastNotifiedDate", today);
+                }
+            }
+        }, 10000); // Checks every 10 seconds
+        return () => clearInterval(interval);
+    }, []);
+
     const addWorkout = async () => {
         try {
             const res = await API.post("/workouts", { name: input })
@@ -230,21 +252,7 @@ export default function Dashboard() {
             <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
 
             <div className="max-w-6xl mx-auto relative z-10">
-                <Navbar isDarkMode={isDarkMode} />
-
-                {/* THEME TOGGLE */}
-                <div className="flex justify-end mb-4 mt-2">
-                    <button
-                        onClick={toggleTheme}
-                        className={`px-5 py-2.5 rounded-xl font-bold transition-all duration-300 border shadow-sm flex items-center gap-2 ${
-                            isDarkMode
-                                ? "bg-white/10 text-white border-white/20 hover:bg-white/20"
-                                : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
-                        }`}
-                    >
-                        {isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-                    </button>
-                </div>
+                <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
 
                 {user ? (
                     <>

@@ -5,11 +5,11 @@ let openai;
 // Lazily initialize the OpenAI client to prevent startup crashes if the API key is missing.
 function getOpenAIClient() {
     if (!openai) {
-        if (!process.env.YOUR_API_KEY) {
+        if (!process.env.GROQ_API_KEY) {
             throw new Error("The GROQ_API_KEY environment variable is missing or empty.");
         }
         openai = new OpenAI({
-            apiKey: process.env.YOUR_API_KEY,
+            apiKey: process.env.GROQ_API_KEY,
             baseURL: "https://api.groq.com/openai/v1", // Point the OpenAI SDK to Groq
         });
     }
@@ -27,7 +27,9 @@ exports.chat = async (req, res) => {
         }
 
         const completion = await openaiClient.chat.completions.create({
-             // Use Groq's fast LLaMA 3 model
+
+            model: "llama3-8b-8192",
+            // Use Groq's fast LLaMA 3 model
             messages: [
                 { role: "system", content: "You are a fitness coach chatbot. Give short and helpful answers." },
                 { role: "user", content: message }

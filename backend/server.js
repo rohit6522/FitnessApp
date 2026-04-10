@@ -17,6 +17,7 @@ app.use(cors({
     credentials: true
 }))
 
+require("./utils/cron")
 
 app.use(express.json())
 
@@ -26,6 +27,7 @@ app.use("/api/auth", require("./routes/authRoutes"))
 app.use("/api/workouts", require("./routes/workoutRoutes"))
 app.use("/api/profile", require("./routes/profileRoutes"))
 app.use("/api/track", require("./routes/trackRoutes"))
+app.use("/api/reminder", require("./routes/reminderRoutes"))
 
 app.use("/api/chat", require("./routes/chatRoutes"))
 
