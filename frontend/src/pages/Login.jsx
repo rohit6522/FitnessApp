@@ -5,10 +5,12 @@ import { toast } from "sonner"
 import { auth, googleProvider } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Login() {
     const [form, setForm] = useState({ email: "", password: "" })
     const [loading, setLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
     const navigate = useNavigate()
 
     const handleChange = (e) => {
@@ -125,14 +127,24 @@ export default function Login() {
                                         Forgot Password?
                                     </span>
                                 </div>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    placeholder="••••••••"
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full p-3 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        placeholder="••••••••"
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full p-3 pr-10 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-lime-500 transition-colors"
+                                        title={showPassword ? "Hide Password" : "Show Password"}
+                                    >
+                                        {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                                    </button>
+                                </div>
                             </div>
 
                             <button 

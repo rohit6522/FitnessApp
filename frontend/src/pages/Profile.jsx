@@ -98,8 +98,9 @@ export default function Profile() {
                         {isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
                     </button>
                 </div>
+                
 
-                <div className={`max-w-4xl mx-auto backdrop-blur-xl border p-8 md:p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden mt-6 transition-all duration-700 hover:shadow-[0_0_40px_rgba(132,204,22,0.15)] hover:border-lime-500/30 ${isDarkMode ? "bg-gradient-to-br from-white/10 to-white/5 border-white/10" : "bg-gradient-to-br from-white to-gray-50 border-gray-200"}`}>
+                <div className={`max-w-3xl mx-auto backdrop-blur-xl border p-6 md:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden mt-6 transition-all duration-700 hover:shadow-[0_0_40px_rgba(132,204,22,0.15)] hover:border-lime-500/30 ${isDarkMode ? "bg-gradient-to-br from-white/10 to-white/5 border-white/10" : "bg-gradient-to-br from-white to-gray-50 border-gray-200"}`}>
                     <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-lime-500/20 rounded-full blur-[100px] pointer-events-none transition-transform duration-700 hover:scale-110"></div>
 
                     <div className="relative z-10">

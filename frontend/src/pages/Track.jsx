@@ -89,6 +89,9 @@ export default function Track() {
         return null
     }
 
+    // Filter logs to only show today's workouts in the list
+    const todayLogs = logs.filter(l => new Date(l.date).toDateString() === new Date().toDateString())
+
     const toggleTheme = () => {
         setIsDarkMode(!isDarkMode);
         localStorage.setItem("theme", !isDarkMode ? "dark" : "light");
@@ -147,23 +150,23 @@ export default function Track() {
                     </div>
                 </div>
 
-                {/* RECENT */}
-                <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Recent <span className="text-emerald-500">Workouts</span></h2>
+                {/* TODAY'S WORKOUTS */}
+                <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Today's <span className="text-emerald-500">Workouts</span></h2>
 
                 <div className="space-y-4">
-                    {logs.length === 0 ? (
+                    {todayLogs.length === 0 ? (
                         <div className={`backdrop-blur-xl border border-dashed p-8 md:p-12 text-center rounded-3xl shadow-lg transition-all ${isDarkMode ? "bg-white/5 border-white/10" : "bg-white border-gray-300"}`}>
                             <p className={`font-medium text-lg ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
-                                No workouts logged yet. Start tracking your progress!
+                                No workouts logged today. Start tracking your progress!
                             </p>
                         </div>
                     ) : (
-                        logs.map(l => (
+                        todayLogs.map(l => (
                             <div key={l._id} className={`backdrop-blur-xl border p-5 rounded-2xl shadow-lg flex justify-between items-center transition-all duration-300 hover:-translate-y-1 ${isDarkMode ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-white border-gray-200 hover:bg-gray-50"}`}>
                                 <div>
                                     <p className={`text-xl font-bold mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{l.workoutName}</p>
                                     <p className={`text-sm font-medium inline-block px-2 py-0.5 rounded-md ${isDarkMode ? "text-lime-500 bg-lime-500/10" : "text-lime-700 bg-lime-100"}`}>
-                                        {new Date(l.date).toLocaleDateString()}
+                                        {new Date(l.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </p>
                                 </div>
                                 <div className="text-right">

@@ -27,6 +27,8 @@ app.use("/api/workouts", require("./routes/workoutRoutes"))
 app.use("/api/profile", require("./routes/profileRoutes"))
 app.use("/api/track", require("./routes/trackRoutes"))
 
+app.use("/api/chat", require("./routes/chatRoutes"))
+
 app.listen(5000, () => {
     console.log("Server running on port 5000")
 })

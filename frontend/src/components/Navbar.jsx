@@ -37,19 +37,19 @@ export default function Navbar({ isDarkMode = true }) {
 
                     {token && (
                         <>
-                            <Link to="/dashboard" className={`hover:text-lime-500 font-semibold transition-colors ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            <Link to="/dashboard" className={`relative hover:text-lime-500 font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-lime-500 after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
                                 Dashboard
                             </Link>
-                            <Link to="/plan" className={`hover:text-lime-500 font-semibold transition-colors ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            <Link to="/plan" className={`relative hover:text-lime-500 font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-lime-500 after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
                                 My Plan
                             </Link>
-                            <Link to="/profile" className={`hover:text-lime-500 font-semibold transition-colors ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            <Link to="/profile" className={`relative hover:text-lime-500 font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-lime-500 after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
                                 Profile
                             </Link>
-                            <Link to="/explore" className={`hover:text-lime-500 font-semibold transition-colors ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            <Link to="/explore" className={`relative hover:text-lime-500 font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-lime-500 after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
                                 Explore
                             </Link>
-                            <Link to="/track" className={`hover:text-lime-500 font-semibold transition-colors ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            <Link to="/track" className={`relative hover:text-lime-500 font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-lime-500 after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
                                 Track
                             </Link>
                         </>
@@ -90,8 +90,9 @@ export default function Navbar({ isDarkMode = true }) {
                             <Link to="/plan" onClick={() => setIsOpen(false)} className={`block p-3 rounded-xl font-semibold transition-colors ${isDarkMode ? "text-gray-300 hover:bg-white/10" : "text-gray-600 hover:bg-gray-100"}`}>My Plan</Link>
                             <Link to="/profile" onClick={() => setIsOpen(false)} className={`block p-3 rounded-xl font-semibold transition-colors ${isDarkMode ? "text-gray-300 hover:bg-white/10" : "text-gray-600 hover:bg-gray-100"}`}>Profile</Link>
                             <Link to="/explore" onClick={() => setIsOpen(false)} className={`block p-3 rounded-xl font-semibold transition-colors ${isDarkMode ? "text-gray-300 hover:bg-white/10" : "text-gray-600 hover:bg-gray-100"}`}>Explore</Link>
+
                             <Link to="/track" onClick={() => setIsOpen(false)} className={`block p-3 rounded-xl font-semibold transition-colors ${isDarkMode ? "text-gray-300 hover:bg-white/10" : "text-gray-600 hover:bg-gray-100"}`}>Track</Link>
-                            
+
                             <div className={`pt-4 mt-2 border-t flex justify-between items-center ${isDarkMode ? "border-white/10" : "border-gray-200"}`}>
                                 <span className={`font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>👋 {user?.name}</span>
                                 <button onClick={logout} className="bg-red-500/20 text-red-500 border border-red-500/50 px-5 py-2 rounded-xl hover:bg-red-500 hover:text-white font-bold transition-all">Logout</button>

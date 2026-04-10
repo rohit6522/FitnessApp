@@ -15,7 +15,7 @@ export default function Plan() {
 
     const [editModal, setEditModal] = useState(false)
     const [editId, setEditId] = useState(null)
-    const [activeDay, setActiveDay] = useState("Thu")
+    const [activeDay, setActiveDay] = useState(days[new Date().getDay()])
     const [workouts, setWorkouts] = useState([])
     const [showModal, setShowModal] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)

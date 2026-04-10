@@ -8,6 +8,7 @@ import Profile from "./pages/Profile"
 import Track from "./pages/Track"
 import Explore from "./pages/Explore"
 import Plan from "./pages/Plan"
+import Chat from "./pages/Chat"
 
 function App() {
     return (
@@ -22,9 +23,10 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/track" element={<Track />} />
                 <Route path="/plan" element={<Plan />} />
-                
                 <Route path="/explore" element={<Explore />} />
             </Routes>
+            {/* Floating Chatbot Widget */}
+            <Chat />
         </BrowserRouter>
     )
 }
