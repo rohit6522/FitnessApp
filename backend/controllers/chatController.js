@@ -17,8 +17,6 @@ function getOpenAIClient() {
 }
 
 
-// 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
-
 exports.chat = async (req, res) => {
     try {
         const openaiClient = getOpenAIClient();
