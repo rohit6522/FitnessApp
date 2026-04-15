@@ -1,7 +1,7 @@
 import Navbar from "../components/Navbar"
 import { useState, useEffect } from "react"
 import { API } from "../api"
-import { FaFire, FaCalendarCheck, FaBolt, FaClipboardList, FaSearch } from "react-icons/fa"
+import { FaFire, FaCalendarCheck, FaBolt, FaClipboardList, FaSearch, FaTint, FaPlus, FaMinus } from "react-icons/fa"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 
@@ -25,6 +25,14 @@ export default function Dashboard() {
     const user = JSON.parse(localStorage.getItem("user"))
     const navigate = useNavigate()
 
+    const getDynamicGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return "Good Morning! Let's start the day right ☀️";
+        if (hour < 17) return "Good Afternoon! Keep the momentum going 🚀";
+        if (hour < 21) return "Good Evening! Finish the day strong 🌙";
+        return "Late night grind, respect! 🦉";
+    };
+
     const [workouts, setWorkouts] = useState([])
     const [input, setInput] = useState("")
     const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -36,11 +44,13 @@ export default function Dashboard() {
     const [displayedGuestQuote, setDisplayedGuestQuote] = useState("")
     const [displayedHeading, setDisplayedHeading] = useState("")
 
+    const [waterIntake, setWaterIntake] = useState(0)
     const [stats, setStats] = useState({
         thisWeek: 0,
         calories: 0,
         streak: 0
     })
+
 
 
     useEffect(() => {
@@ -71,10 +81,10 @@ export default function Dashboard() {
 
                 // Helper to get midnight timestamp for accurate day comparisons
                 const getMidnight = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime()
-                
+
                 const now = new Date()
                 const todayTime = getMidnight(now)
-                
+
                 const yesterday = new Date(now)
                 yesterday.setDate(yesterday.getDate() - 1)
                 const yesterdayTime = getMidnight(yesterday)
@@ -88,7 +98,7 @@ export default function Dashboard() {
                 const startOfWeek = new Date(now)
                 startOfWeek.setDate(now.getDate() - now.getDay())
                 const startOfWeekTime = getMidnight(startOfWeek)
-                
+
                 const weekDays = new Set(
                     logs
                         .map(log => getMidnight(new Date(log.date)))
@@ -122,11 +132,41 @@ export default function Dashboard() {
         }
 
         fetchStats()
-        
+
         // Poll every 10 seconds to keep stats updated
         const intervalId = setInterval(fetchStats, 10000)
         return () => clearInterval(intervalId)
     }, [])
+
+    // Water Tracker Initialization (Resets every day at midnight)
+    useEffect(() => {
+        const today = new Date().toDateString();
+        const storedDate = localStorage.getItem("waterDate");
+        const storedWater = localStorage.getItem("waterIntake");
+
+        if (storedDate === today && storedWater) {
+            setWaterIntake(parseInt(storedWater, 10));
+        } else {
+            setWaterIntake(0);
+            localStorage.setItem("waterDate", today);
+            localStorage.setItem("waterIntake", 0);
+        }
+    }, []);
+
+    const handleAddWater = () => {
+        const newIntake = waterIntake + 1;
+        setWaterIntake(newIntake);
+        localStorage.setItem("waterIntake", newIntake);
+        toast.success("Stay hydrated! 💧", { id: "water-toast" }); // 'id' prevents notification spam if clicked fast
+    };
+
+    const handleRemoveWater = () => {
+        if (waterIntake > 0) {
+            const newIntake = waterIntake - 1;
+            setWaterIntake(newIntake);
+            localStorage.setItem("waterIntake", newIntake);
+        }
+    };
 
     // Typing Effect for User Name
     useEffect(() => {
@@ -169,7 +209,7 @@ export default function Dashboard() {
             let quoteIndex = 0;
             while (isMounted) {
                 const currentQuote = MOTIVATIONAL_QUOTES[quoteIndex];
-                
+
                 // 1. Type the quote forward
                 for (let i = 0; i <= currentQuote.length; i++) {
                     if (!isMounted) return;
@@ -207,7 +247,7 @@ export default function Dashboard() {
             let quoteIndex = 0;
             while (isMounted) {
                 const currentQuote = GUEST_QUOTES[quoteIndex];
-                
+
                 // 1. Type the quote forward
                 for (let i = 0; i <= currentQuote.length; i++) {
                     if (!isMounted) return;
@@ -319,7 +359,7 @@ export default function Dashboard() {
                             <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-lime-500/20 rounded-full blur-[100px] group-hover:bg-lime-500/30 group-hover:scale-110 transition-all duration-700 pointer-events-none"></div>
                             <div className="relative z-10">
                                 <p className="text-sm font-extrabold text-lime-500 mb-2 tracking-widest uppercase flex items-center gap-2">
-                                    <FaBolt className="animate-pulse" /> Welcome back
+                                    <FaBolt className="animate-pulse" /> {getDynamicGreeting()}
                                 </p>
                                 <h1 className={`text-3xl md:text-5xl font-black mb-3 tracking-tighter flex flex-wrap items-center gap-3 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
                                     <span>{displayedName}<span className="animate-pulse font-light opacity-50">|</span></span>
@@ -332,7 +372,8 @@ export default function Dashboard() {
                         </div>
 
                         {/* STATS CARDS */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+
                             {/* Card 1 */}
                             <div className={`backdrop-blur-xl border p-6 rounded-[2rem] shadow-lg flex flex-col justify-between relative overflow-hidden group transition-all hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(59,130,246,0.3)] duration-500 ${isDarkMode ? "bg-white/5 border-white/10 hover:border-blue-500/50 hover:bg-white/10" : "bg-white border-gray-200 hover:border-blue-500/50 hover:bg-gray-50"}`}>
                                 <div className="absolute -right-2 -bottom-2 text-7xl opacity-10 group-hover:scale-110 group-hover:-rotate-12 transition-transform duration-500 text-blue-500"><FaCalendarCheck /></div>
@@ -368,11 +409,39 @@ export default function Dashboard() {
                                     <p className={`text-4xl font-black tracking-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>{stats.calories} <span className="text-lg font-bold text-gray-500">kcal</span></p>
                                 </div>
                             </div>
+
+
+
+                            {/* Card 4 - Water Intake */}
+                            <div className={`backdrop-blur-xl border p-6 rounded-[2rem] shadow-lg flex flex-col justify-between relative overflow-hidden group transition-all hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(6,182,212,0.3)] duration-500 ${isDarkMode ? "bg-white/5 border-white/10 hover:border-cyan-500/50 hover:bg-white/10" : "bg-white border-gray-200 hover:border-cyan-500/50 hover:bg-gray-50"}`}>
+                                <div className="absolute -right-2 -bottom-2 text-7xl opacity-10 group-hover:scale-110 group-hover:-rotate-12 transition-transform duration-500 text-cyan-500"><FaTint /></div>
+                                <div className="relative z-10">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className={`p-3 rounded-xl ${isDarkMode ? "bg-cyan-500/20 text-cyan-400" : "bg-cyan-100 text-cyan-600"}`}><FaTint className="text-xl" /></div>
+                                            <p className={`font-bold uppercase tracking-wider text-xs ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Water</p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <button onClick={handleRemoveWater} disabled={waterIntake === 0} className={`p-2 rounded-lg transition-all hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 ${isDarkMode ? "bg-red-500/20 text-red-400 hover:bg-red-500/40" : "bg-red-100 text-red-700 hover:bg-red-200"}`} title="Remove 1 Glass">
+                                                <FaMinus size={14} />
+                                            </button>
+                                            <button onClick={handleAddWater} className={`p-2 rounded-lg transition-all hover:scale-110 active:scale-95 flex items-center justify-center ${isDarkMode ? "bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/40" : "bg-cyan-100 text-cyan-700 hover:bg-cyan-200"}`} title="Drink 1 Glass">
+                                                <FaPlus size={14} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p className={`text-4xl font-black tracking-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>{waterIntake} <span className="text-lg font-bold text-gray-500">Cups</span></p>
+                                </div>
+                                {/* Water level indicator bottom border (Goals: 8 glasses) */}
+                                <div className="absolute bottom-0 left-0 h-1.5 bg-cyan-500 transition-all duration-700 ease-out" style={{ width: `${Math.min((waterIntake / 10) * 100, 100)}%` }}>
+                                </div>
+                            </div>
+                            
                         </div>
 
                         {/* ACTION CARDS */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div 
+                            <div
                                 onClick={() => navigate("/plan")}
                                 className={`group cursor-pointer backdrop-blur-xl border p-6 rounded-[2rem] shadow-lg relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(132,204,22,0.4)] ${isDarkMode ? "bg-white/5 border-white/10 hover:border-lime-500/50 hover:bg-lime-500/5" : "bg-white border-gray-200 hover:border-lime-500/50 hover:bg-lime-50"}`}
                             >
@@ -388,7 +457,7 @@ export default function Dashboard() {
                                 </div>
                             </div>
 
-                            <div 
+                            <div
                                 onClick={() => navigate("/explore")}
                                 className={`group cursor-pointer backdrop-blur-xl border p-6 rounded-[2rem] shadow-lg relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(16,185,129,0.4)] ${isDarkMode ? "bg-white/5 border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5" : "bg-white border-gray-200 hover:border-emerald-500/50 hover:bg-emerald-50"}`}
                             >

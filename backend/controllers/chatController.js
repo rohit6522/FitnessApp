@@ -69,3 +69,48 @@ exports.chat = async (req, res) => {
         res.status(500).json({ error: "Failed to communicate with the AI service. " + err.message })
     }
 }
+
+exports.generateWorkout = async (req, res) => {
+    try {
+        const client = getGeminiClient();
+        const { prompt } = req.body;
+        const model = client.getGenerativeModel({ model: "gemini-1.5-flash" });
+        
+        const fullPrompt = `You are an expert fitness coach. Create a workout plan based on this request: "${prompt}". 
+        Return ONLY valid JSON with this exact structure, with no markdown code blocks around it: 
+        { "name": "Workout Name", "type": "Strength", "exercises": [ { "name": "Exercise Name", "sets": 3, "reps": 12, "time": 0 } ] }`;
+        
+        const result = await model.generateContent(fullPrompt);
+        let text = result.response.text().trim();
+        
+        // Clean up markdown formatting if Gemini includes it
+        if (text.startsWith("```json")) text = text.replace(/^```json/, "");
+        if (text.startsWith("```")) text = text.replace(/^```/, "");
+        if (text.endsWith("```")) text = text.replace(/```$/, "");
+        
+        const plan = JSON.parse(text.trim());
+        res.json(plan);
+    } catch (err) {
+        console.error("Generate Workout Error:", err);
+        res.status(500).json({ error: "Failed to generate workout." });
+    }
+};
+
+exports.generateMealPlan = async (req, res) => {
+    try {
+        const client = getGeminiClient();
+        const { weight, goal, diet } = req.body;
+        const model = client.getGenerativeModel({ model: "gemini-1.5-flash" });
+        
+        const prompt = `You are an expert nutritionist. I currently weigh ${weight}kg. My main fitness goal is "${goal}". 
+        My dietary preference is ${diet}. 
+        Please generate a highly structured, concise 7-day meal plan for me. Include breakfast, lunch, and dinner. 
+        Format it beautifully using markdown with emojis. Do not make it too long.`;
+        
+        const result = await model.generateContent(prompt);
+        res.json({ mealPlan: result.response.text() });
+    } catch (err) {
+        console.error("Meal Plan Error:", err);
+        res.status(500).json({ error: "Failed to generate meal plan." });
+    }
+};

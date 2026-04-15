@@ -2,7 +2,7 @@ import Navbar from "../components/Navbar"
 import { useState, useEffect } from "react"
 import { API } from "../api"
 import { toast } from "sonner"
-import { FaUserCircle, FaCamera } from "react-icons/fa"
+import { FaUserCircle, FaCamera, FaArrowsAltH, FaUpload, FaMagic, FaUtensils, FaSpinner } from "react-icons/fa"
 
 export default function Profile() {
 
@@ -20,8 +20,16 @@ export default function Profile() {
         return savedTheme ? savedTheme === "dark" : true;
     })
 
+    const [beforePic, setBeforePic] = useState(localStorage.getItem("beforePic") || "")
+    const [afterPic, setAfterPic] = useState(localStorage.getItem("afterPic") || "")
+    const [sliderValue, setSliderValue] = useState(50)
+
     const [time, setTime] = useState(localStorage.getItem("workoutReminderTime") || "")
     const [savedTime, setSavedTime] = useState(localStorage.getItem("workoutReminderTime") || "")
+    
+    const [diet, setDiet] = useState("No Preference")
+    const [mealPlan, setMealPlan] = useState("")
+    const [isGeneratingMeal, setIsGeneratingMeal] = useState(false)
 
     // Helper function to convert 24-hour time to 12-hour AM/PM format
     const formatAMPM = (timeStr) => {
@@ -127,6 +135,32 @@ export default function Profile() {
         }
     }
 
+    // Progress Photos Uploaders
+    const handleBeforeUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setBeforePic(reader.result);
+                try { localStorage.setItem("beforePic", reader.result); } catch (e) { toast.error("Image too large!"); }
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleAfterUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setAfterPic(reader.result);
+                try { localStorage.setItem("afterPic", reader.result); } catch (e) { toast.error("Image too large!"); }
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+
     const saveProfile = async () => {
         try {
             const payload = {
@@ -142,6 +176,27 @@ export default function Profile() {
             toast.error("Save failed ❌")
         }
     }
+    
+    const generateMealPlan = async () => {
+        if (!form.weight || !form.goal) {
+            toast.error("Please fill your weight and goal first!");
+            return;
+        }
+        setIsGeneratingMeal(true);
+        try {
+            const res = await API.post("/chat/mealplan", { 
+                weight: form.weight, 
+                goal: form.goal, 
+                diet 
+            });
+            setMealPlan(res.data.mealPlan);
+            toast.success("Meal plan generated! 🥗");
+        } catch (err) {
+            toast.error("Failed to generate meal plan.");
+        } finally {
+            setIsGeneratingMeal(false);
+        }
+    };
 
     const toggleTheme = () => {
         setIsDarkMode(!isDarkMode);
@@ -297,6 +352,96 @@ export default function Profile() {
                         </div>
                     </div>
                 </div>
+
+                {/* TRANSFORMATION SLIDER CARD */}
+                <div className={`max-w-3xl mx-auto backdrop-blur-xl border p-6 md:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden mt-6 mb-10 transition-all duration-700 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/30 ${isDarkMode ? "bg-gradient-to-br from-white/10 to-white/5 border-white/10" : "bg-gradient-to-br from-white to-gray-50 border-gray-200"}`}>
+                    <div className="absolute top-[-20%] left-[-10%] w-64 h-64 bg-emerald-500/20 rounded-full blur-[100px] pointer-events-none transition-transform duration-700 hover:scale-110"></div>
+                    
+                    <div className="relative z-10">
+                        <h2 className={`text-2xl font-black tracking-tight mb-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                            My <span className="text-emerald-500">Transformation</span>
+                        </h2>
+                        <p className={`text-sm mb-6 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Upload your 'Before' and 'After' photos to visualize your progress over time.</p>
+
+                        <div className="flex flex-col md:flex-row gap-4 mb-6">
+                            <label className={`flex-1 flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-2xl cursor-pointer transition-colors ${isDarkMode ? "border-white/20 hover:border-emerald-500 hover:bg-white/5" : "border-gray-300 hover:border-emerald-500 hover:bg-gray-50"}`}>
+                                <FaUpload className={`text-2xl mb-2 ${isDarkMode ? "text-gray-500" : "text-gray-400"}`}/>
+                                <span className={`text-xs font-bold uppercase tracking-widest ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Upload Before</span>
+                                <input type="file" accept="image/*" className="hidden" onChange={handleBeforeUpload} />
+                            </label>
+                            
+                            <label className={`flex-1 flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-2xl cursor-pointer transition-colors ${isDarkMode ? "border-white/20 hover:border-lime-500 hover:bg-white/5" : "border-gray-300 hover:border-lime-500 hover:bg-gray-50"}`}>
+                                <FaUpload className={`text-2xl mb-2 ${isDarkMode ? "text-gray-500" : "text-gray-400"}`}/>
+                                <span className={`text-xs font-bold uppercase tracking-widest ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Upload After</span>
+                                <input type="file" accept="image/*" className="hidden" onChange={handleAfterUpload} />
+                            </label>
+                        </div>
+
+                        {/* Comparison Slider */}
+                        {(beforePic || afterPic) && (
+                            <div className={`relative w-full h-[300px] md:h-[400px] rounded-2xl overflow-hidden border-4 shadow-xl ${isDarkMode ? "bg-[#111] border-white/10" : "bg-gray-200 border-white"}`}>
+                                {/* Before Image (Base) */}
+                                {beforePic ? <img src={beforePic} className="absolute inset-0 w-full h-full object-cover select-none" alt="Before" /> : <div className="absolute inset-0 flex items-center justify-center text-gray-500">No Before Image</div>}
+                                
+                                {/* After Image (Clipped overlay) */}
+                                {afterPic && <img src={afterPic} className="absolute inset-0 w-full h-full object-cover select-none" style={{ clipPath: `polygon(0 0, ${sliderValue}% 0, ${sliderValue}% 100%, 0 100%)` }} alt="After" />}
+                                
+                                {/* Slider Handle & Line */}
+                                <div className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-20 pointer-events-none drop-shadow-md" style={{ left: `${sliderValue}%` }}>
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] border-2 border-emerald-500">
+                                        <FaArrowsAltH className="text-emerald-500 text-sm" />
+                                    </div>
+                                </div>
+
+                                {/* Invisible Range Input (The actual controller) */}
+                                <input type="range" min="0" max="100" value={sliderValue} onChange={(e) => setSliderValue(e.target.value)} className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30" />
+                            </div>
+                        )}
+
+                    </div>
+                </div>
+
+                {/* AI MEAL PLANNER CARD */}
+                <div className={`max-w-3xl mx-auto backdrop-blur-xl border p-6 md:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden mt-6 mb-10 transition-all duration-700 hover:shadow-[0_0_40px_rgba(249,115,22,0.15)] hover:border-orange-500/30 ${isDarkMode ? "bg-gradient-to-br from-white/10 to-white/5 border-white/10" : "bg-gradient-to-br from-white to-gray-50 border-gray-200"}`}>
+                    <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-orange-500/20 rounded-full blur-[100px] pointer-events-none transition-transform duration-700 hover:scale-110"></div>
+                    
+                    <div className="relative z-10">
+                        <h2 className={`text-2xl font-black tracking-tight mb-2 flex items-center gap-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                            AI Personalized <span className="text-orange-500">Meal Plan</span> <FaUtensils className="text-orange-500 text-xl" />
+                        </h2>
+                        <p className={`text-sm mb-6 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Let our AI Nutritionist craft a 7-day diet plan based on your exact weight and fitness goals.</p>
+
+                        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                            <div className="flex-1 space-y-1.5">
+                                <label className={labelClass}>Dietary Preference</label>
+                                <select value={diet} onChange={(e) => setDiet(e.target.value)} className={`w-full p-3.5 rounded-xl outline-none border transition-all focus:border-orange-500 appearance-none cursor-pointer ${isDarkMode ? "bg-[#111] text-white border-white/10" : "bg-gray-50 text-gray-900 border-gray-200"}`}>
+                                    <option className={optionClass}>No Preference</option>
+                                    <option className={optionClass}>Vegetarian</option>
+                                    <option className={optionClass}>Vegan</option>
+                                    <option className={optionClass}>Keto</option>
+                                    <option className={optionClass}>High Protein</option>
+                                </select>
+                            </div>
+                            <div className="flex items-end">
+                                <button 
+                                    onClick={generateMealPlan}
+                                    disabled={isGeneratingMeal}
+                                    className="w-full sm:w-auto bg-gradient-to-r from-orange-400 to-red-500 text-white font-extrabold px-6 py-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] active:scale-95 disabled:opacity-70 flex items-center justify-center gap-2"
+                                >
+                                    {isGeneratingMeal ? <FaSpinner className="animate-spin" /> : <><FaMagic /> Generate</>}
+                                </button>
+                            </div>
+                        </div>
+
+                        {mealPlan && (
+                            <div className={`mt-6 p-6 rounded-2xl border overflow-y-auto max-h-[400px] shadow-inner ${isDarkMode ? "bg-black/50 border-white/10" : "bg-white border-gray-200"}`}>
+                                {/* Render markdown formatting properly by keeping whitespace */}
+                                <pre className={`whitespace-pre-wrap font-sans text-sm leading-relaxed ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>{mealPlan}</pre>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
             </div>
         </div>
         

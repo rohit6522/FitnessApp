@@ -4,7 +4,7 @@ import { API } from "../api"
 import { toast } from "sonner"
 
 import { useNavigate, useLocation } from "react-router-dom"
-import { FaPlus, FaEdit, FaTrash, FaDumbbell, FaCheckCircle, FaTimes, FaCalendarAlt } from "react-icons/fa"
+import { FaPlus, FaEdit, FaTrash, FaDumbbell, FaCheckCircle, FaTimes, FaCalendarAlt, FaMagic, FaSpinner } from "react-icons/fa"
 
 
 export default function Plan() {
@@ -33,6 +33,10 @@ export default function Plan() {
     const [sets, setSets] = useState("")
     const [reps, setReps] = useState("")
     const [time, setTime] = useState("")
+    
+    const [aiPrompt, setAiPrompt] = useState("")
+    const [isGenerating, setIsGenerating] = useState(false)
+    const [showAiInput, setShowAiInput] = useState(false)
 
 
     // FETCH
@@ -100,6 +104,27 @@ export default function Plan() {
         }
     }
 
+    // GENERATE WITH AI
+    const generateWithAI = async () => {
+        if (!aiPrompt) return;
+        setIsGenerating(true);
+        try {
+            // Adjust the API route if your backend is configured differently
+            const res = await API.post("/chat/workout", { prompt: aiPrompt });
+            setWorkoutName(res.data.name || "AI Workout");
+            setType(res.data.type || "Strength");
+            setExerciseList(res.data.exercises || []);
+            
+            setShowAiInput(false);
+            setAiPrompt("");
+            toast.success("AI generated your workout! Review and save. 🪄");
+        } catch (err) {
+            console.log(err);
+            toast.error("AI generation failed. Try again.");
+        } finally {
+            setIsGenerating(false);
+        }
+    };
 
     // DELETE
     const deleteExercise = (index) => {
@@ -267,7 +292,7 @@ export default function Plan() {
             {/* MODAL */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className={`border w-full max-w-md p-8 rounded-[2.5rem] shadow-2xl animate-fadeIn relative overflow-hidden ${isDarkMode ? "bg-[#0a0a0a] border-white/10" : "bg-white border-gray-200"}`}>
+                    <div className={`border w-full max-w-md p-6 md:p-8 rounded-[2.5rem] shadow-2xl animate-fadeIn relative overflow-y-auto overflow-x-hidden max-h-[90vh] ${isDarkMode ? "bg-[#0a0a0a] border-white/10" : "bg-white border-gray-200"}`}>
                         <div className="absolute top-[-20%] right-[-20%] w-48 h-48 bg-lime-500/20 rounded-full blur-[80px] pointer-events-none"></div>
 
                         {isSuccess ? (
@@ -283,6 +308,35 @@ export default function Plan() {
                                     <button onClick={() => setShowModal(false)} className={`transition-all p-3 rounded-xl ${isDarkMode ? "text-gray-400 hover:text-white bg-white/5 hover:bg-white/10" : "text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200"}`}>
                                         <FaTimes />
                                     </button>
+                                </div>
+
+                                {/* AI GENERATOR SECTION */}
+                                <div className={`p-4 rounded-2xl border mb-6 relative overflow-hidden ${isDarkMode ? "bg-lime-500/5 border-lime-500/20" : "bg-lime-50 border-lime-200"}`}>
+                                    {!showAiInput ? (
+                                        <button onClick={() => setShowAiInput(true)} className="w-full flex items-center justify-center gap-2 font-bold text-lime-500 hover:text-lime-400 transition-colors">
+                                            <FaMagic /> Auto-Generate with AI
+                                        </button>
+                                    ) : (
+                                        <div className="space-y-3 animate-fadeIn">
+                                            <label className={`text-xs font-bold uppercase tracking-wider text-lime-500`}>What do you want to train?</label>
+                                            <textarea
+                                                value={aiPrompt}
+                                                onChange={(e) => setAiPrompt(e.target.value)}
+                                                placeholder="e.g., I have 30 minutes, dumbbells only, and want to hit chest and triceps."
+                                                className={`w-full p-3 rounded-xl outline-none border transition-all focus:border-lime-500 resize-none h-20 ${isDarkMode ? "bg-black/40 text-white border-lime-500/30 placeholder-gray-500" : "bg-white text-gray-900 border-lime-200 placeholder-gray-400"}`}
+                                            />
+                                            <div className="flex gap-2">
+                                                <button onClick={() => setShowAiInput(false)} className={`flex-1 py-2 rounded-xl font-bold border transition-colors ${isDarkMode ? "bg-white/5 text-gray-400 border-white/10" : "bg-gray-100 text-gray-600 border-gray-200"}`}>Cancel</button>
+                                                <button 
+                                                    onClick={generateWithAI}
+                                                    disabled={isGenerating || !aiPrompt}
+                                                    className="flex-[2] py-2 rounded-xl font-bold bg-lime-500 text-black flex items-center justify-center gap-2 hover:bg-lime-400 disabled:opacity-50"
+                                                >
+                                                    {isGenerating ? <FaSpinner className="animate-spin" /> : <><FaMagic /> Generate Plan</>}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="space-y-4 relative z-10">
@@ -360,7 +414,7 @@ export default function Plan() {
             {/* EDIT MODAL */}
             {editModal && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
-                    <div className={`border w-full max-w-md p-8 rounded-[2.5rem] shadow-2xl animate-fadeIn relative overflow-hidden ${isDarkMode ? "bg-[#0a0a0a] border-white/10" : "bg-white border-gray-200"}`}>
+                    <div className={`border w-full max-w-md p-6 md:p-8 rounded-[2.5rem] shadow-2xl animate-fadeIn relative overflow-y-auto overflow-x-hidden max-h-[90vh] ${isDarkMode ? "bg-[#0a0a0a] border-white/10" : "bg-white border-gray-200"}`}>
                         <div className="absolute top-[-20%] right-[-20%] w-48 h-48 bg-blue-500/20 rounded-full blur-[80px] pointer-events-none"></div>
 
                         <div className="flex justify-between items-center mb-6 relative z-10">
