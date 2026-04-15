@@ -11,6 +11,7 @@ export default function Navbar({ isDarkMode = true, toggleTheme }) {
     const logout = () => {
         localStorage.removeItem("token")
         localStorage.removeItem("user")
+        localStorage.removeItem("chatHistory")
         window.location.href = "/"
     }
 

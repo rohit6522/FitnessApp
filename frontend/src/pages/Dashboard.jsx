@@ -64,8 +64,58 @@ export default function Dashboard() {
             if (!user) return
 
             try {
-                const res = await API.get(`/track/stats/${user._id || user.id}`)
-                setStats(res.data)
+                // Fetch all workout logs to calculate daily/weekly stats locally
+                // This ensures "Midnight" is perfectly synced with the user's local timezone!
+                const res = await API.get(`/track/${user._id || user.id}`)
+                const logs = Array.isArray(res.data) ? res.data : []
+
+                // Helper to get midnight timestamp for accurate day comparisons
+                const getMidnight = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime()
+                
+                const now = new Date()
+                const todayTime = getMidnight(now)
+                
+                const yesterday = new Date(now)
+                yesterday.setDate(yesterday.getDate() - 1)
+                const yesterdayTime = getMidnight(yesterday)
+
+                // 1. Today's Calories (Resets to 0 exactly at midnight)
+                const todayCalories = logs
+                    .filter(log => getMidnight(new Date(log.date)) === todayTime)
+                    .reduce((sum, log) => sum + (Number(log.calories) || 0), 0)
+
+                // 2. This Week's Workout Days (Resets every Sunday)
+                const startOfWeek = new Date(now)
+                startOfWeek.setDate(now.getDate() - now.getDay())
+                const startOfWeekTime = getMidnight(startOfWeek)
+                
+                const weekDays = new Set(
+                    logs
+                        .map(log => getMidnight(new Date(log.date)))
+                        .filter(time => time >= startOfWeekTime)
+                )
+
+                // 3. Day Streak (Breaks if no workout today OR yesterday)
+                const uniqueLogDays = [...new Set(logs.map(log => getMidnight(new Date(log.date))))]
+                let streak = 0
+                let checkDate = todayTime
+
+                if (!uniqueLogDays.includes(todayTime)) {
+                    checkDate = yesterdayTime
+                }
+
+                while (uniqueLogDays.includes(checkDate)) {
+                    streak++
+                    const prev = new Date(checkDate)
+                    prev.setDate(prev.getDate() - 1)
+                    checkDate = getMidnight(prev)
+                }
+
+                setStats({
+                    thisWeek: weekDays.size,
+                    calories: todayCalories,
+                    streak: streak
+                })
             } catch (err) {
                 console.error("Error fetching stats:", err)
             }
@@ -73,8 +123,8 @@ export default function Dashboard() {
 
         fetchStats()
         
-        // Poll every 5 seconds to keep stats updated in real-time
-        const intervalId = setInterval(fetchStats, 5000)
+        // Poll every 10 seconds to keep stats updated
+        const intervalId = setInterval(fetchStats, 10000)
         return () => clearInterval(intervalId)
     }, [])
 

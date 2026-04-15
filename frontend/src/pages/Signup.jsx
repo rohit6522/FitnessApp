@@ -23,6 +23,12 @@ export default function Signup() {
         e.preventDefault()
         setLoading(true)
 
+        if (form.password.length < 6) {
+            toast.error("Password must be at least 6 characters.")
+            setLoading(false)
+            return
+        }
+
         try {
             await API.post("/auth/signup", form)
             toast.success("Account created successfully")
@@ -49,6 +55,12 @@ export default function Signup() {
         });
 
         // 3. Save your Backend's JWT token and redirect
+        // Clear previous user's local data
+        localStorage.removeItem("profilePic")
+        localStorage.removeItem("workoutReminderTime")
+        localStorage.removeItem("lastNotifiedDate")
+        localStorage.removeItem("chatHistory")
+        
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
         toast.success("Google Signup successful! 🚀");

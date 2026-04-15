@@ -51,7 +51,11 @@ exports.signup = async (req, res) => {
 
         const existingUser = await User.findOne({ email })
         if (existingUser) {
-            return res.status(400).json({ msg: "User already exists" })
+            return res.status(400).json({ message: "User with this email already exists" })
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({ message: "Password must be at least 6 characters long" })
         }
 
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -62,9 +66,9 @@ exports.signup = async (req, res) => {
             password: hashedPassword
         })
 
-        res.json({ msg: "Signup successful" })
+        res.json({ message: "Signup successful" })
     } catch (error) {
-        res.status(500).json({ msg: "Server error" })
+        res.status(500).json({ message: "Server error" })
     }
 }
 
@@ -157,7 +161,11 @@ exports.resetPassword = async (req, res) => {
     const user = await User.findOne({ email })
 
     if (!user || user.otp !== otp || user.otpExpiry < Date.now()) {
-        return res.status(400).json({ msg: "Invalid or expired OTP" })
+        return res.status(400).json({ message: "Invalid or expired OTP" })
+    }
+
+    if (newPassword.length < 6) {
+        return res.status(400).json({ message: "Password must be at least 6 characters long" })
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10)
@@ -168,5 +176,5 @@ exports.resetPassword = async (req, res) => {
 
     await user.save()
 
-    res.json({ msg: "Password updated" })
+    res.json({ message: "Password updated" })
 }

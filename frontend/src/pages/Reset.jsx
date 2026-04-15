@@ -52,6 +52,12 @@ export default function Reset() {
     const resetPassword = async (e) => {
         e.preventDefault()
         setLoading(true)
+
+        if (password.length < 6) {
+            toast.error("Password must be at least 6 characters.")
+            setLoading(false)
+            return
+        }
         try {
             const finalOtp = otp.join("")
 
@@ -64,7 +70,7 @@ export default function Reset() {
             toast.success("Password Updated ")
             navigate("/login")
         } catch (err) {
-            toast.error(err.response?.data?.message || "Invalid OTP ")
+            toast.error(err.response?.data?.message || "Reset failed. Please check your details.")
         } finally {
             setLoading(false)
         }

@@ -129,7 +129,13 @@ export default function Profile() {
 
     const saveProfile = async () => {
         try {
-            await API.post("/profile", form)
+            const payload = {
+                ...form,
+                age: form.age === "" ? undefined : Number(form.age),
+                weight: form.weight === "" ? undefined : Number(form.weight),
+                height: form.height === "" ? undefined : Number(form.height)
+            }
+            await API.post("/profile", payload)
             toast.success("Profile Saved ✅")
         } catch (err) {
             console.log(err.response?.data || err.message)

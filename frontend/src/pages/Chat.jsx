@@ -5,9 +5,20 @@ import { FaCommentDots, FaTimes, FaPaperPlane } from "react-icons/fa"
 export default function Chat() {
     const [isOpen, setIsOpen] = useState(false)
     const [input, setInput] = useState("")
-    const [messages, setMessages] = useState([
-        { sender: "bot", text: "Hi there! I'm your AI Fitness Coach 💪. How can I help you today?" }
-    ])
+    const [messages, setMessages] = useState(() => {
+        try {
+            const saved = localStorage.getItem("chatHistory")
+            if (saved) return JSON.parse(saved)
+        } catch (e) {
+            console.error("Error parsing chat history:", e)
+        }
+        
+        // Get user's name for personalized greeting
+        const userStr = localStorage.getItem("user")
+        const user = userStr ? JSON.parse(userStr) : null
+        const userName = user?.name ? user.name.split(" ")[0] : "there"
+        return [{ sender: "bot", text: `Welcome back ${userName} 🎉 How can I assist you today?` }]
+    })
     const [isLoading, setIsLoading] = useState(false)
     const messagesEndRef = useRef(null)
 
@@ -27,6 +38,11 @@ export default function Chat() {
         }
     }, [messages, isLoading, isOpen])
 
+    // Save chat history to local storage whenever it changes
+    useEffect(() => {
+        localStorage.setItem("chatHistory", JSON.stringify(messages))
+    }, [messages])
+
     const sendMessage = async () => {
         if (!input.trim()) return
 
@@ -34,11 +50,18 @@ export default function Chat() {
         setInput("") // Clear immediately for better UX
 
         const userMsg = { sender: "user", text: userText }
-        setMessages(prev => [...prev, userMsg])
+        const newMessages = [...messages, userMsg]
+        
+        setMessages(newMessages)
         setIsLoading(true)
 
         try {
-            const res = await API.post("/chat", { message: userText })
+            const history = newMessages.map(msg => ({
+                role: msg.sender === "bot" ? "assistant" : "user",
+                content: msg.text
+            }))
+
+            const res = await API.post("/chat", { message: userText, history })
             const botMsg = { sender: "bot", text: res.data.reply }
             setMessages(prev => [...prev, botMsg])
         } catch (err) {
@@ -52,9 +75,18 @@ export default function Chat() {
     }
 
     const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && !isLoading) {
             sendMessage()
         }
+    }
+
+    const clearChat = () => {
+        const userStr = localStorage.getItem("user")
+        const user = userStr ? JSON.parse(userStr) : null
+        const userName = user?.name ? user.name.split(" ")[0] : "there"
+        const initialMsg = [{ sender: "bot", text: `Welcome back ${userName} 🎉 How can I assist you today?` }]
+        setMessages(initialMsg)
+        localStorage.removeItem("chatHistory")
     }
 
     return (
@@ -68,12 +100,20 @@ export default function Chat() {
                     <div className="flex items-center gap-2 font-black tracking-tight text-lg">
                         <FaCommentDots className="text-xl" /> AI Coach
                     </div>
-                    <button 
-                        onClick={() => setIsOpen(false)} 
-                        className="p-1 rounded-full hover:bg-black/10 transition-colors"
-                    >
-                        <FaTimes size={18} />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button 
+                            onClick={clearChat}
+                            className="text-xs font-bold bg-black/10 hover:bg-black/20 px-2 py-1 rounded-lg transition-colors"
+                        >
+                            Clear
+                        </button>
+                        <button 
+                            onClick={() => setIsOpen(false)} 
+                            className="p-1 rounded-full hover:bg-black/10 transition-colors"
+                        >
+                            <FaTimes size={18} />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Chat Area */}
@@ -81,7 +121,7 @@ export default function Chat() {
                     {messages.map((m, i) => (
                         <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
                             <div className={`max-w-[80%] p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm ${m.sender === "user" ? "bg-lime-500 text-black rounded-br-none font-medium" : isDarkMode ? "bg-white/10 text-gray-200 rounded-bl-none" : "bg-white border border-gray-200 text-gray-800 rounded-bl-none"}`}>
-                                {m.text}
+                            <span className="whitespace-pre-wrap">{m.text}</span>
                             </div>
                         </div>
                     ))}

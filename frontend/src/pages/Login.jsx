@@ -24,6 +24,12 @@ export default function Login() {
         try {
             const res = await API.post("/auth/login", form)
 
+            // Clear previous user's local data to ensure a fresh session
+            localStorage.removeItem("profilePic")
+            localStorage.removeItem("workoutReminderTime")
+            localStorage.removeItem("lastNotifiedDate")
+            localStorage.removeItem("chatHistory")
+
             localStorage.setItem("token", res.data.token)
             localStorage.setItem("user", JSON.stringify(res.data.user))
 
@@ -53,6 +59,12 @@ export default function Login() {
         });
 
         // 3. Save your Backend's JWT token and redirect
+        // Clear previous user's local data
+        localStorage.removeItem("profilePic")
+        localStorage.removeItem("workoutReminderTime")
+        localStorage.removeItem("lastNotifiedDate")
+        localStorage.removeItem("chatHistory")
+        
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
         toast.success("Google Login successful! 🚀");

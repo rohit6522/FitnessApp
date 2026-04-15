@@ -2,7 +2,7 @@ const Profile = require("../models/Profile")
 
 exports.saveProfile = async (req, res) => {
     try {
-        const { name, age, weight, height, goal, level } = req.body
+        const { name, age, weight, height, goal, level, profilePic } = req.body
 
         const userId = req.user.id || req.user._id
 
@@ -11,13 +11,13 @@ exports.saveProfile = async (req, res) => {
         if (profile) {
             profile = await Profile.findOneAndUpdate(
                 { user: userId },
-                { name, age, weight, height, goal, level },
+                { name, age, weight, height, goal, level, profilePic },
                 { new: true }
             )
         } else {
             profile = await Profile.create({
                 user: userId,
-                name, age, weight, height, goal, level
+                name, age, weight, height, goal, level, profilePic
             })
         }
 

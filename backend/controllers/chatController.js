@@ -1,42 +1,69 @@
-const OpenAI = require("openai")
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-let openai;
+let genAI;
 
-// Lazily initialize the OpenAI client to prevent startup crashes if the API key is missing.
-function getOpenAIClient() {
-    if (!openai) {
-        if (!process.env.GROQ_API_KEY) {
-            throw new Error("The GROQ_API_KEY environment variable is missing or empty.");
+function getGeminiClient() {
+    if (!genAI) {
+        const apiKey = process.env.GEMINI_API_KEY;
+        
+        if (!apiKey) {
+            throw new Error("GEMINI_API_KEY is missing. Please add it to your .env file.");
         }
-        openai = new OpenAI({
-            apiKey: process.env.GROQ_API_KEY,
-            baseURL: "https://api.groq.com/openai/v1", // Point the OpenAI SDK to Groq
-        });
+        genAI = new GoogleGenerativeAI(apiKey);
     }
-    return openai;
+    return genAI;
 }
 
 
 exports.chat = async (req, res) => {
     try {
-        const openaiClient = getOpenAIClient();
-        const { message } = req.body
+        const client = getGeminiClient();
+        const { message, history } = req.body
 
-        if (!message) {
+        if (!message && !history) {
             return res.status(400).json({ error: "Message is required." });
         }
 
-        const completion = await openaiClient.chat.completions.create({
+        const model = client.getGenerativeModel({
+            model: "gemini-1.5-flash",
+            systemInstruction: "You are a fitness coach chatbot. Give short and helpful answers."
+        });
 
-            model: "llama3-8b-8192",
-            // Use Groq's fast LLaMA 3 model
-            messages: [
-                { role: "system", content: "You are a fitness coach chatbot. Give short and helpful answers." },
-                { role: "user", content: message }
-            ]
-        })
+        let contents = [];
 
-        res.json({ reply: completion.choices[0].message.content })
+        if (history && Array.isArray(history)) {
+            // 1. Map frontend format to Gemini format
+            let mappedHistory = history.map(msg => ({
+                role: msg.role === "assistant" ? "model" : "user",
+                parts: [{ text: msg.content }]
+            }));
+
+            // 2. Gemini strict rule: History MUST start with a 'user' message.
+            // If the chat starts with the bot's welcome message, remove it.
+            while (mappedHistory.length > 0 && mappedHistory[0].role === "model") {
+                mappedHistory.shift();
+            }
+
+            // 3. Gemini strict rule: Roles MUST strictly alternate (user -> model -> user).
+            for (let i = 0; i < mappedHistory.length; i++) {
+                const currentMsg = mappedHistory[i];
+                const lastValidMsg = contents[contents.length - 1];
+                
+                if (!lastValidMsg || lastValidMsg.role !== currentMsg.role) {
+                    contents.push(currentMsg);
+                } else {
+                    // If duplicate roles appear, merge their text into one message
+                    lastValidMsg.parts[0].text += "\n" + currentMsg.parts[0].text;
+                }
+            }
+        } else if (message) {
+            contents = [{ role: "user", parts: [{ text: message }] }];
+        }
+
+        const result = await model.generateContent({ contents });
+        const response = await result.response;
+        
+        res.json({ reply: response.text() })
     } catch (err) {
         console.error("Error in chat controller:", err); // Log the full error for better debugging
         res.status(500).json({ error: "Failed to communicate with the AI service. " + err.message })
