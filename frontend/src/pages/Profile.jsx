@@ -205,15 +205,15 @@ export default function Profile() {
 
     // Extracted Tailwind classes to reduce code size and repetition
     const labelClass = `text-xs font-semibold uppercase tracking-wider ${isDarkMode ? "text-gray-400" : "text-gray-500"}`
-    const inputClass = `w-full p-3.5 rounded-xl outline-none border transition-all focus:border-lime-500 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`
-    const selectClass = `w-full p-3.5 rounded-xl outline-none border transition-all focus:border-lime-500 appearance-none cursor-pointer ${isDarkMode ? "bg-[#111] text-white border-white/10" : "bg-gray-50 text-gray-900 border-gray-200"}`
+    const inputClass = `w-full p-3.5 rounded-xl outline-none border transition-all focus:border-orange-500 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`
+    const selectClass = `w-full p-3.5 rounded-xl outline-none border transition-all focus:border-orange-500 appearance-none cursor-pointer ${isDarkMode ? "bg-[#111] text-white border-white/10" : "bg-gray-50 text-gray-900 border-gray-200"}`
     const optionClass = isDarkMode ? "bg-gray-900" : "bg-white"
 
     return (
         <div className={`min-h-screen relative overflow-hidden p-4 md:p-6 transition-colors duration-500 ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
             {/* Glowing Orbs for Aesthetic */}
-            <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-lime-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
-            <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
+            <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-orange-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-rose-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
 
             <div className="max-w-6xl mx-auto relative z-10">
                 <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
@@ -253,8 +253,8 @@ export default function Profile() {
                 </div>
 
 
-                <div className={`max-w-3xl mx-auto backdrop-blur-xl border p-6 md:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden mt-6 transition-all duration-700 hover:shadow-[0_0_40px_rgba(132,204,22,0.15)] hover:border-lime-500/30 ${isDarkMode ? "bg-gradient-to-br from-white/10 to-white/5 border-white/10" : "bg-gradient-to-br from-white to-gray-50 border-gray-200"}`}>
-                    <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-lime-500/20 rounded-full blur-[100px] pointer-events-none transition-transform duration-700 hover:scale-110"></div>
+                <div className={`max-w-3xl mx-auto backdrop-blur-xl border p-6 md:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden mt-6 transition-all duration-700 hover:shadow-[0_0_40px_rgba(249,115,22,0.15)] hover:border-orange-500/30 ${isDarkMode ? "bg-gradient-to-br from-white/10 to-white/5 border-white/10" : "bg-gradient-to-br from-white to-gray-50 border-gray-200"}`}>
+                    <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-orange-500/20 rounded-full blur-[100px] pointer-events-none transition-transform duration-700 hover:scale-110"></div>
 
                     <div className="relative z-10">
                         {/* PROFILE PIC & HEADER SECTION */}
@@ -298,7 +298,7 @@ export default function Profile() {
                                 )}
                             </div>
                             <h1 className={`text-4xl md:text-5xl font-black tracking-tighter ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-                                My <span className="text-lime-500">Profile</span>
+                                    My <span className="text-orange-500">Profile</span>
                             </h1>
                         </div>
 
@@ -345,7 +345,7 @@ export default function Profile() {
 
                             <button
                                 onClick={saveProfile}
-                                className="w-full bg-gradient-to-r from-lime-500 to-emerald-500 text-black font-extrabold text-lg py-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(132,204,22,0.4)] active:scale-95 mt-6"
+                                className="w-full bg-gradient-to-r from-orange-500 to-rose-500 text-black font-extrabold text-lg py-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] active:scale-95 mt-6"
                             >
                                 SAVE PROFILE
                             </button>
@@ -354,27 +354,53 @@ export default function Profile() {
                 </div>
 
                 {/* TRANSFORMATION SLIDER CARD */}
-                <div className={`max-w-3xl mx-auto backdrop-blur-xl border p-6 md:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden mt-6 mb-10 transition-all duration-700 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/30 ${isDarkMode ? "bg-gradient-to-br from-white/10 to-white/5 border-white/10" : "bg-gradient-to-br from-white to-gray-50 border-gray-200"}`}>
-                    <div className="absolute top-[-20%] left-[-10%] w-64 h-64 bg-emerald-500/20 rounded-full blur-[100px] pointer-events-none transition-transform duration-700 hover:scale-110"></div>
+                <div className={`max-w-3xl mx-auto backdrop-blur-xl border p-6 md:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden mt-6 mb-10 transition-all duration-700 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)] hover:border-rose-500/30 ${isDarkMode ? "bg-gradient-to-br from-white/10 to-white/5 border-white/10" : "bg-gradient-to-br from-white to-gray-50 border-gray-200"}`}>
+                    <div className="absolute top-[-20%] left-[-10%] w-64 h-64 bg-rose-500/20 rounded-full blur-[100px] pointer-events-none transition-transform duration-700 hover:scale-110"></div>
                     
                     <div className="relative z-10">
                         <h2 className={`text-2xl font-black tracking-tight mb-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-                            My <span className="text-emerald-500">Transformation</span>
+                            My <span className="text-rose-500">Transformation</span>
                         </h2>
                         <p className={`text-sm mb-6 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Upload your 'Before' and 'After' photos to visualize your progress over time.</p>
 
                         <div className="flex flex-col md:flex-row gap-4 mb-6">
-                            <label className={`flex-1 flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-2xl cursor-pointer transition-colors ${isDarkMode ? "border-white/20 hover:border-emerald-500 hover:bg-white/5" : "border-gray-300 hover:border-emerald-500 hover:bg-gray-50"}`}>
-                                <FaUpload className={`text-2xl mb-2 ${isDarkMode ? "text-gray-500" : "text-gray-400"}`}/>
-                                <span className={`text-xs font-bold uppercase tracking-widest ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Upload Before</span>
-                                <input type="file" accept="image/*" className="hidden" onChange={handleBeforeUpload} />
-                            </label>
+                            <div className="flex-1 flex flex-col gap-2">
+                                <label className={`flex-1 flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-2xl cursor-pointer transition-colors ${isDarkMode ? "border-white/20 hover:border-rose-500 hover:bg-white/5" : "border-gray-300 hover:border-rose-500 hover:bg-gray-50"}`}>
+                                    <FaUpload className={`text-2xl mb-2 ${isDarkMode ? "text-gray-500" : "text-gray-400"}`}/>
+                                    <span className={`text-xs font-bold uppercase tracking-widest ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                                        {beforePic ? "Change Before" : "Upload Before"}
+                                    </span>
+                                    <input type="file" accept="image/*" className="hidden" onChange={handleBeforeUpload} />
+                                </label>
+                                {beforePic && (
+                                    <button
+                                        type="button"
+                                        onClick={() => { setBeforePic(""); localStorage.removeItem("beforePic"); }}
+                                        className="text-xs text-red-500 hover:text-red-400 font-bold uppercase tracking-wider transition-colors text-center"
+                                    >
+                                        Remove Before
+                                    </button>
+                                )}
+                            </div>
                             
-                            <label className={`flex-1 flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-2xl cursor-pointer transition-colors ${isDarkMode ? "border-white/20 hover:border-lime-500 hover:bg-white/5" : "border-gray-300 hover:border-lime-500 hover:bg-gray-50"}`}>
-                                <FaUpload className={`text-2xl mb-2 ${isDarkMode ? "text-gray-500" : "text-gray-400"}`}/>
-                                <span className={`text-xs font-bold uppercase tracking-widest ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Upload After</span>
-                                <input type="file" accept="image/*" className="hidden" onChange={handleAfterUpload} />
-                            </label>
+                            <div className="flex-1 flex flex-col gap-2">
+                                <label className={`flex-1 flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-2xl cursor-pointer transition-colors ${isDarkMode ? "border-white/20 hover:border-orange-500 hover:bg-white/5" : "border-gray-300 hover:border-orange-500 hover:bg-gray-50"}`}>
+                                    <FaUpload className={`text-2xl mb-2 ${isDarkMode ? "text-gray-500" : "text-gray-400"}`}/>
+                                    <span className={`text-xs font-bold uppercase tracking-widest ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                                        {afterPic ? "Change After" : "Upload After"}
+                                    </span>
+                                    <input type="file" accept="image/*" className="hidden" onChange={handleAfterUpload} />
+                                </label>
+                                {afterPic && (
+                                    <button
+                                        type="button"
+                                        onClick={() => { setAfterPic(""); localStorage.removeItem("afterPic"); }}
+                                        className="text-xs text-red-500 hover:text-red-400 font-bold uppercase tracking-wider transition-colors text-center"
+                                    >
+                                        Remove After
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
                         {/* Comparison Slider */}
@@ -388,8 +414,8 @@ export default function Profile() {
                                 
                                 {/* Slider Handle & Line */}
                                 <div className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-20 pointer-events-none drop-shadow-md" style={{ left: `${sliderValue}%` }}>
-                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] border-2 border-emerald-500">
-                                        <FaArrowsAltH className="text-emerald-500 text-sm" />
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] border-2 border-rose-500">
+                                        <FaArrowsAltH className="text-rose-500 text-sm" />
                                     </div>
                                 </div>
 

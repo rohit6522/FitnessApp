@@ -91,8 +91,8 @@ export default function Signup() {
             </div>
 
             {/* Glowing Orbs for Trending Aesthetic */}
-            <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-lime-500/20 rounded-full blur-[120px] animate-pulse"></div>
-            <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: "1s" }}></div>
+            <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-orange-500/20 rounded-full blur-[120px] animate-pulse"></div>
+            <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-rose-500/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: "1s" }}></div>
 
             <div className="z-10 flex w-full max-w-[900px] h-auto md:min-h-[580px] mx-4 rounded-3xl overflow-hidden shadow-2xl bg-white/5 backdrop-blur-xl border border-white/10 transition-all duration-500">
 
@@ -102,7 +102,7 @@ export default function Signup() {
 
                         <div className="mb-5 text-center md:text-left">
                             <h1 className="text-3xl md:text-4xl font-black text-white mb-1 tracking-tight whitespace-nowrap">
-                                FIT<span className="text-lime-500">NESS</span>
+                                FIT<span className="text-orange-500">NESS</span>
                             </h1>
                             <p className="text-gray-400 font-medium tracking-wide text-sm">Join the elite. Start your journey.</p>
                         </div>
@@ -119,7 +119,7 @@ export default function Signup() {
                                     placeholder="Enter your full name"
                                     onChange={handleChange}
                                     required
-                                    className="w-full p-3 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
+                                    className="w-full p-3 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                                 />
                             </div>
 
@@ -131,7 +131,7 @@ export default function Signup() {
                                     placeholder="Enter your email"
                                     onChange={handleChange}
                                     required
-                                    className="w-full p-3 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
+                                    className="w-full p-3 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                                 />
                             </div>
 
@@ -144,12 +144,12 @@ export default function Signup() {
                                         placeholder="••••••••"
                                         onChange={handleChange}
                                         required
-                                        className="w-full p-3 pr-10 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
+                                        className="w-full p-3 pr-10 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-lime-500 transition-colors"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-500 transition-colors"
                                         title={showPassword ? "Hide Password" : "Show Password"}
                                     >
                                         {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
@@ -159,7 +159,7 @@ export default function Signup() {
 
                             <button
                                 disabled={loading}
-                                className="w-full bg-gradient-to-r from-lime-500 to-emerald-500 text-black font-extrabold text-lg py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(132,204,22,0.4)] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed mt-2"
+                                className="w-full bg-gradient-to-r from-orange-500 to-rose-500 text-black font-extrabold text-lg py-3 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed mt-2"
                             >
                                 {loading ? "Creating Account..." : "SIGN UP"}
                             </button>
@@ -176,7 +176,7 @@ export default function Signup() {
                                 Already have an account?{" "}
                                 <span
                                     onClick={() => navigate("/login")}
-                                    className="text-lime-500 font-semibold cursor-pointer hover:underline"
+                                    className="text-orange-500 font-semibold cursor-pointer hover:underline"
                                 >
                                     Log In
                                 </span>
@@ -208,7 +208,7 @@ export default function Signup() {
                     {/* Motivational Quote */}
                     <div className="absolute bottom-12 right-8 left-12 p-6 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 shadow-xl">
                         <p className="text-white text-lg font-medium italic leading-relaxed">"You won't get my kind of body if you eat junk food."</p>
-                        <p className="text-lime-500 text-sm mt-3 font-bold uppercase tracking-wider">— The Great Khali</p>
+                        <p className="text-orange-500 text-sm mt-3 font-bold uppercase tracking-wider">— The Great Khali</p>
                     </div>
                 </div>
 

@@ -96,7 +96,7 @@ export default function Chat() {
                 className={`mb-4 w-[20rem] md:w-[24rem] rounded-[2rem] shadow-2xl overflow-hidden border flex flex-col transition-all duration-300 origin-bottom-right ${isOpen ? "scale-100 opacity-100" : "scale-0 opacity-0 pointer-events-none absolute bottom-16 right-0"} ${isDarkMode ? "bg-gray-950 border-white/10" : "bg-white border-gray-200"}`}
             >
                 {/* Header */}
-                <div className="bg-gradient-to-r from-lime-500 to-emerald-500 p-4 flex justify-between items-center text-black">
+                <div className="bg-gradient-to-r from-orange-500 to-rose-500 p-4 flex justify-between items-center text-black">
                     <div className="flex items-center gap-2 font-black tracking-tight text-lg">
                         <FaCommentDots className="text-xl" /> AI Coach
                     </div>
@@ -120,7 +120,7 @@ export default function Chat() {
                 <div className={`h-[24rem] p-4 overflow-y-auto flex flex-col gap-4 ${isDarkMode ? "bg-[#0a0a0a]" : "bg-gray-50"}`}>
                     {messages.map((m, i) => (
                         <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
-                            <div className={`max-w-[80%] p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm ${m.sender === "user" ? "bg-lime-500 text-black rounded-br-none font-medium" : isDarkMode ? "bg-white/10 text-gray-200 rounded-bl-none" : "bg-white border border-gray-200 text-gray-800 rounded-bl-none"}`}>
+                            <div className={`max-w-[80%] p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm ${m.sender === "user" ? "bg-orange-500 text-black rounded-br-none font-medium" : isDarkMode ? "bg-white/10 text-gray-200 rounded-bl-none" : "bg-white border border-gray-200 text-gray-800 rounded-bl-none"}`}>
                             <span className="whitespace-pre-wrap">{m.text}</span>
                             </div>
                         </div>
@@ -146,12 +146,12 @@ export default function Chat() {
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyDown}
                         placeholder="Ask about workouts..."
-                        className={`flex-1 p-3 rounded-xl outline-none text-sm transition-all focus:border-lime-500 border ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-500 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
+                        className={`flex-1 p-3 rounded-xl outline-none text-sm transition-all focus:border-orange-500 border ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-500 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
                     />
                     <button 
                         onClick={sendMessage}
                         disabled={isLoading || !input.trim()}
-                        className="p-3.5 bg-lime-500 text-black rounded-xl hover:bg-lime-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                        className="p-3.5 bg-orange-500 text-black rounded-xl hover:bg-orange-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
                     >
                         <FaPaperPlane size={14} />
                     </button>
@@ -161,7 +161,7 @@ export default function Chat() {
             {/* Floating Toggle Button */}
             <button 
                 onClick={() => setIsOpen(!isOpen)}
-                className={`w-16 h-16 bg-gradient-to-r from-lime-500 to-emerald-500 rounded-full shadow-2xl flex items-center justify-center text-black hover:scale-110 transition-transform duration-300 z-50 absolute bottom-0 right-0 ${isOpen ? "scale-0 opacity-0 pointer-events-none" : "scale-100 opacity-100 hover:shadow-[0_0_30px_rgba(132,204,22,0.5)]"}`}
+                className={`w-16 h-16 bg-gradient-to-r from-orange-500 to-rose-500 rounded-full shadow-2xl flex items-center justify-center text-black hover:scale-110 transition-transform duration-300 z-50 absolute bottom-0 right-0 ${isOpen ? "scale-0 opacity-0 pointer-events-none" : "scale-100 opacity-100 hover:shadow-[0_0_30px_rgba(249,115,22,0.5)]"}`}
             >
                 <FaCommentDots size={28} />
             </button>

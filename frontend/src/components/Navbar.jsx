@@ -24,7 +24,7 @@ export default function Navbar({ isDarkMode = true, toggleTheme }) {
                 {/* LEFT: LOGO */}
                 <div className="md:w-1/3">
                     <h1 className={`text-2xl font-black tracking-tighter ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-                        FIT<span className="text-lime-500">NESS</span>
+                        FIT<span className="text-orange-500">NESS</span>
                     </h1>
                 </div>
 
@@ -49,19 +49,19 @@ export default function Navbar({ isDarkMode = true, toggleTheme }) {
 
                     {token && (
                         <>
-                            <Link to="/dashboard" className={`relative hover:text-lime-500 font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-lime-500 after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            <Link to="/dashboard" className={`relative hover:text-orange-500 font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-orange-500 after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
                                 Dashboard
                             </Link>
-                            <Link to="/plan" className={`relative hover:text-lime-500 font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-lime-500 after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            <Link to="/plan" className={`relative hover:text-orange-500 font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-orange-500 after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
                                 My Plan
                             </Link>
-                            <Link to="/profile" className={`relative hover:text-lime-500 font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-lime-500 after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            <Link to="/profile" className={`relative hover:text-orange-500  font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-orange-500  after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
                                 Profile
                             </Link>
-                            <Link to="/explore" className={`relative hover:text-lime-500 font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-lime-500 after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            <Link to="/explore" className={`relative hover:text-orange-500  font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-orange-500 after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
                                 Explore
                             </Link>
-                            <Link to="/track" className={`relative hover:text-lime-500 font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-lime-500 after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            <Link to="/track" className={`relative hover:text-orange-500  font-semibold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-orange-500  after:transition-transform after:duration-300 hover:after:scale-x-100 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
                                 Track
                             </Link>
                         </>
@@ -83,7 +83,7 @@ export default function Navbar({ isDarkMode = true, toggleTheme }) {
                     {!token ? (
                         <Link
                             to="/login"
-                            className="bg-lime-500 text-black px-6 py-2 rounded-xl font-bold hover:bg-lime-400 hover:scale-[1.05] transition-all shadow-[0_0_15px_rgba(132,204,22,0.4)]"
+                            className="bg-orange-500  text-black px-6 py-2 rounded-xl font-bold hover:bg-orange-500  hover:scale-[1.05] transition-all shadow-[0_0_15px_rgba(132,204,22,0.4)]"
                         >
                             Login
                         </Link>
@@ -121,7 +121,7 @@ export default function Navbar({ isDarkMode = true, toggleTheme }) {
                             </div>
                         </>
                     ) : (
-                        <Link to="/login" onClick={() => setIsOpen(false)} className="bg-lime-500 text-black text-center px-6 py-3 rounded-xl font-bold hover:bg-lime-400 transition-all">Login</Link>
+                        <Link to="/login" onClick={() => setIsOpen(false)} className="bg-orange-500  text-black text-center px-6 py-3 rounded-xl font-bold hover:bg-orange-500  transition-all">Login</Link>
                     )}
                 </div>
             )}

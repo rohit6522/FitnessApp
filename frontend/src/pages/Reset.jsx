@@ -98,8 +98,8 @@ export default function Reset() {
             </div>
 
             {/* Glowing Orbs for Trending Aesthetic */}
-            <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-lime-500/20 rounded-full blur-[120px] animate-pulse"></div>
-            <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: "1s" }}></div>
+            <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-orange-500/20 rounded-full blur-[120px] animate-pulse"></div>
+            <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-rose-500/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: "1s" }}></div>
 
             <div className="z-10 flex w-full max-w-[1000px] h-[650px] mx-4 rounded-3xl overflow-hidden shadow-2xl bg-white/5 backdrop-blur-xl border border-white/10 transition-all duration-500">
 
@@ -109,7 +109,7 @@ export default function Reset() {
                         
                         <div className="mb-8 text-center md:text-left">
                             <h1 className="text-4xl font-black text-white mb-2 tracking-tighter">
-                                FIT<span className="text-lime-500">NESS</span>
+                                FIT<span className="text-orange-500">NESS</span>
                             </h1>
                             <p className="text-gray-400 font-medium tracking-wide text-sm">Secure your account and get back on track.</p>
                         </div>
@@ -126,7 +126,7 @@ export default function Reset() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
-                                    className="w-full p-3.5 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
+                                    className="w-full p-3.5 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                                 />
                             </div>
 
@@ -146,7 +146,7 @@ export default function Reset() {
                                             onChange={(e) => handleOTPChange(e.target.value, i)}
                                             onKeyDown={(e) => handleKeyDown(e, i)}
                                             required
-                                            className="w-12 h-12 md:w-14 md:h-14 text-center rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500 text-xl font-bold"
+                                            className="w-12 h-12 md:w-14 md:h-14 text-center rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-xl font-bold"
                                         />
                                     ))}
                                 </div>
@@ -160,13 +160,13 @@ export default function Reset() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
-                                    className="w-full p-3.5 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-lime-500 focus:ring-1 focus:ring-lime-500"
+                                    className="w-full p-3.5 rounded-xl bg-black/30 text-white outline-none border border-white/10 placeholder-gray-500 transition-all duration-300 focus:bg-black/50 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                                 />
                             </div>
 
                             <button 
                                 disabled={loading}
-                                className="w-full bg-gradient-to-r from-lime-500 to-emerald-500 text-black font-extrabold text-lg py-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(132,204,22,0.4)] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed mt-4"
+                                className="w-full bg-gradient-to-r from-orange-500 to-rose-500 text-black font-extrabold text-lg py-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed mt-4"
                             >
                                 {loading ? "Resetting..." : "RESET PASSWORD"}
                             </button>
@@ -175,7 +175,7 @@ export default function Reset() {
                             <div className="flex flex-col items-center gap-3 mt-4">
                                 <p 
                                     onClick={() => time === 0 && resendOTP()}
-                                    className={`text-sm font-semibold transition-colors ${time > 0 ? "text-gray-600 cursor-not-allowed" : "text-lime-500 cursor-pointer hover:underline"}`}
+                                    className={`text-sm font-semibold transition-colors ${time > 0 ? "text-gray-600 cursor-not-allowed" : "text-orange-500 cursor-pointer hover:underline"}`}
                                 >
                                     {time > 0 ? `Resend OTP in ${time}s` : "Resend OTP"}
                                 </p>
@@ -205,7 +205,7 @@ export default function Reset() {
                     {/* Motivational Quote */}
                     <div className="absolute bottom-12 right-8 left-12 p-6 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 shadow-xl">
                         <p className="text-white text-lg font-medium italic leading-relaxed">"Your comeback is always stronger than your setback."</p>
-                        <p className="text-lime-500 text-sm mt-3 font-bold uppercase tracking-wider">— Fitness</p>
+                        <p className="text-orange-500 text-sm mt-3 font-bold uppercase tracking-wider">— Fitness</p>
                     </div>
                 </div>
             </div>

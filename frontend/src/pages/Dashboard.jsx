@@ -346,8 +346,8 @@ export default function Dashboard() {
     return (
         <div className={`min-h-screen relative overflow-hidden p-4 md:p-6 transition-colors duration-500 ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
             {/* Glowing Orbs for Aesthetic */}
-            <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-lime-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
-            <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
+            <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-orange-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-rose-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
 
             <div className="max-w-6xl mx-auto relative z-10">
                 <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
@@ -355,10 +355,10 @@ export default function Dashboard() {
                 {user ? (
                     <>
                         {/* TOP BANNER FOR LOGGED-IN USERS */}
-                        <div className={`backdrop-blur-xl border p-6 md:p-8 rounded-[2rem] mb-6 relative overflow-hidden shadow-2xl group transition-all duration-700 hover:shadow-[0_0_40px_rgba(132,204,22,0.15)] hover:border-lime-500/30 ${isDarkMode ? "bg-gradient-to-br from-white/10 to-white/5 border-white/10" : "bg-gradient-to-br from-white to-gray-50 border-gray-200"}`}>
-                            <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-lime-500/20 rounded-full blur-[100px] group-hover:bg-lime-500/30 group-hover:scale-110 transition-all duration-700 pointer-events-none"></div>
+                        <div className={`backdrop-blur-xl border p-6 md:p-8 rounded-[2rem] mb-6 relative overflow-hidden shadow-2xl group transition-all duration-700 hover:shadow-[0_0_40px_rgba(249,115,22,0.15)] hover:border-orange-500/30 ${isDarkMode ? "bg-gradient-to-br from-white/10 to-white/5 border-white/10" : "bg-gradient-to-br from-white to-gray-50 border-gray-200"}`}>
+                            <div className="absolute top-[-50%] right-[-10%] w-96 h-96 bg-orange-500/20 rounded-full blur-[100px] group-hover:bg-orange-500/30 group-hover:scale-110 transition-all duration-700 pointer-events-none"></div>
                             <div className="relative z-10">
-                                <p className="text-sm font-extrabold text-lime-500 mb-2 tracking-widest uppercase flex items-center gap-2">
+                                <p className="text-sm font-extrabold text-orange-500 mb-2 tracking-widest uppercase flex items-center gap-2">
                                     <FaBolt className="animate-pulse" /> {getDynamicGreeting()}
                                 </p>
                                 <h1 className={`text-3xl md:text-5xl font-black mb-3 tracking-tighter flex flex-wrap items-center gap-3 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
@@ -443,15 +443,15 @@ export default function Dashboard() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div
                                 onClick={() => navigate("/plan")}
-                                className={`group cursor-pointer backdrop-blur-xl border p-6 rounded-[2rem] shadow-lg relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(132,204,22,0.4)] ${isDarkMode ? "bg-white/5 border-white/10 hover:border-lime-500/50 hover:bg-lime-500/5" : "bg-white border-gray-200 hover:border-lime-500/50 hover:bg-lime-50"}`}
+                                className={`group cursor-pointer backdrop-blur-xl border p-6 rounded-[2rem] shadow-lg relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(249,115,22,0.4)] ${isDarkMode ? "bg-white/5 border-white/10 hover:border-orange-500/50 hover:bg-orange-500/5" : "bg-white border-gray-200 hover:border-orange-500/50 hover:bg-orange-50"}`}
                             >
-                                <div className="absolute top-0 right-0 w-48 h-48 bg-lime-500/10 rounded-full blur-[60px] group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
+                                <div className="absolute top-0 right-0 w-48 h-48 bg-orange-500/10 rounded-full blur-[60px] group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
                                 <div className="relative z-10 flex items-center justify-between">
                                     <div>
                                         <h3 className={`text-xl font-black mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>My Workout Plan</h3>
                                         <p className={`font-medium text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>View and edit your daily schedule</p>
                                     </div>
-                                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-lime-400 to-emerald-500 text-black flex items-center justify-center text-xl shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-400 to-rose-500 text-black flex items-center justify-center text-xl shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                                         <FaClipboardList />
                                     </div>
                                 </div>
@@ -459,15 +459,15 @@ export default function Dashboard() {
 
                             <div
                                 onClick={() => navigate("/explore")}
-                                className={`group cursor-pointer backdrop-blur-xl border p-6 rounded-[2rem] shadow-lg relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(16,185,129,0.4)] ${isDarkMode ? "bg-white/5 border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5" : "bg-white border-gray-200 hover:border-emerald-500/50 hover:bg-emerald-50"}`}
+                                className={`group cursor-pointer backdrop-blur-xl border p-6 rounded-[2rem] shadow-lg relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(244,63,94,0.4)] ${isDarkMode ? "bg-white/5 border-white/10 hover:border-rose-500/50 hover:bg-rose-500/5" : "bg-white border-gray-200 hover:border-rose-500/50 hover:bg-rose-50"}`}
                             >
-                                <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-[60px] group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
+                                <div className="absolute top-0 right-0 w-48 h-48 bg-rose-500/10 rounded-full blur-[60px] group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
                                 <div className="relative z-10 flex items-center justify-between">
                                     <div>
                                         <h3 className={`text-xl font-black mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Browse Exercises</h3>
                                         <p className={`font-medium text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Discover routines & form tips</p>
                                     </div>
-                                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 text-black flex items-center justify-center text-xl shadow-lg group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300">
+                                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-rose-400 to-pink-500 text-black flex items-center justify-center text-xl shadow-lg group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300">
                                         <FaSearch />
                                     </div>
                                 </div>
@@ -479,9 +479,9 @@ export default function Dashboard() {
                     <div className="flex flex-col items-center justify-center text-center py-10 md:py-16 px-4 relative z-10">
                         <h1 className={`text-5xl md:text-6xl font-black mb-4 tracking-tighter min-h-[3rem] md:min-h-[3.75rem] ${isDarkMode ? "text-white" : "text-gray-900"}`}>
                             {displayedHeading.slice(0, 15)}
-                            {displayedHeading.length > 15 && <span className="text-lime-500">{displayedHeading.slice(15, 19)}</span>}
+                            {displayedHeading.length > 15 && <span className="text-orange-500">{displayedHeading.slice(15, 19)}</span>}
                             {displayedHeading.length > 19 && displayedHeading.slice(19, 22)}
-                            {displayedHeading.length > 22 && <span className="text-emerald-500">{displayedHeading.slice(22, 26)}</span>}
+                            {displayedHeading.length > 22 && <span className="text-rose-500">{displayedHeading.slice(22, 26)}</span>}
                             <span className="animate-pulse font-light opacity-50">|</span>
                         </h1>
                         <p className={`text-sm md:text-base max-w-xl mx-auto mb-6 leading-relaxed min-h-[4rem] md:min-h-[4.5rem] ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
@@ -490,7 +490,7 @@ export default function Dashboard() {
                         <div className="flex flex-wrap items-center justify-center gap-4">
                             <button
                                 onClick={() => navigate("/signup")}
-                                className="bg-gradient-to-r from-lime-500 to-emerald-500 text-black font-extrabold text-sm px-6 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(132,204,22,0.4)] active:scale-95"
+                                className="bg-gradient-to-r from-orange-500 to-rose-500 text-black font-extrabold text-sm px-6 py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] active:scale-95"
                             >
                                 START FOR FREE
                             </button>
@@ -504,8 +504,8 @@ export default function Dashboard() {
 
                         {/* Feature Highlights */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-12 w-full text-left">
-                            <div className={`backdrop-blur-xl border p-5 rounded-3xl shadow-lg transition-all hover:-translate-y-2 duration-500 ${isDarkMode ? "bg-white/5 border-white/10 hover:border-lime-500/50 hover:bg-white/10" : "bg-white border-gray-200 hover:border-lime-500/50 hover:bg-gray-50"}`}>
-                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg mb-3 shadow-md ${isDarkMode ? "bg-lime-500/20 text-lime-400" : "bg-lime-100 text-lime-600"}`}><FaClipboardList /></div>
+                            <div className={`backdrop-blur-xl border p-5 rounded-3xl shadow-lg transition-all hover:-translate-y-2 duration-500 ${isDarkMode ? "bg-white/5 border-white/10 hover:border-orange-500/50 hover:bg-white/10" : "bg-white border-gray-200 hover:border-orange-500/50 hover:bg-gray-50"}`}>
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg mb-3 shadow-md ${isDarkMode ? "bg-orange-500/20 text-orange-400" : "bg-orange-100 text-orange-600"}`}><FaClipboardList /></div>
                                 <h3 className={`text-lg font-bold mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Smart Planning</h3>
                                 <p className={`text-xs md:text-sm leading-relaxed ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Create custom workout plans tailored to your specific fitness goals and weekly schedule.</p>
                             </div>

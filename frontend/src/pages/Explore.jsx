@@ -112,27 +112,27 @@ export default function Explore() {
     return (
         <div className={`min-h-screen relative overflow-hidden p-4 md:p-6 transition-colors duration-500 ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
             {/* Glowing Orbs for Aesthetic */}
-            <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-lime-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
-            <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
+            <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-orange-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-rose-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
 
             <div className="max-w-6xl mx-auto relative z-10">
                 <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
 
                 {/* HEADER */}
                 <h1 className={`text-4xl font-black mb-8 tracking-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-                    Explore <span className="text-lime-500">Fitness</span>
+                    Explore <span className="text-orange-500">Fitness</span>
                 </h1>
 
                 {/* FITNESS TIPS */}
                 <div className="mb-12">
                     <h2 className={`text-2xl font-bold mb-6 flex items-center gap-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-                        💡 <span className="bg-clip-text text-transparent bg-gradient-to-r from-lime-500 to-emerald-500">Quick Tips</span>
+                        💡 <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-rose-500">Quick Tips</span>
                     </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {fitnessTips.map((item, i) => (
                             <div key={i} className={`backdrop-blur-xl border p-6 rounded-3xl shadow-lg transition-all duration-300 group relative overflow-hidden ${isDarkMode ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-white border-gray-200 hover:bg-gray-50"}`}>
-                                <div className="absolute top-0 right-0 w-24 h-24 bg-lime-500/10 rounded-full blur-[40px] group-hover:bg-lime-500/20 transition-all duration-500 pointer-events-none"></div>
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-orange-500/10 rounded-full blur-[40px] group-hover:bg-orange-500/20 transition-all duration-500 pointer-events-none"></div>
                                 <h3 className={`text-lg font-bold mb-2 relative z-10 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{item.title}</h3>
                                 <p className={`text-sm leading-relaxed relative z-10 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>{item.tip}</p>
                             </div>
@@ -142,7 +142,7 @@ export default function Explore() {
 
                 {/* EXERCISE LIBRARY HEADER */}
                 <h2 className={`text-3xl font-black mb-6 tracking-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-                    Exercise <span className="text-lime-500">Library</span>
+                    Exercise <span className="text-orange-500">Library</span>
                 </h2>
 
                 {/* INTERACTIVE BODY MAP & LIST LAYOUT */}
@@ -159,32 +159,32 @@ export default function Explore() {
                                 <circle cx="100" cy="30" r="22" className={`${isDarkMode ? 'fill-gray-700' : 'fill-gray-200'} pointer-events-none`} />
                                 
                                 {/* Shoulders */}
-                                <path onClick={() => setFilter("Shoulders")} className={`cursor-pointer transition-all duration-300 ${filter === "Shoulders" ? 'fill-lime-500 drop-shadow-[0_0_10px_rgba(132,204,22,0.8)]' : isDarkMode ? 'fill-gray-600 hover:fill-lime-400' : 'fill-gray-300 hover:fill-lime-400'}`} d="M 50 60 Q 100 40 150 60 L 140 80 L 60 80 Z" />
+                                <path onClick={() => setFilter("Shoulders")} className={`cursor-pointer transition-all duration-300 ${filter === "Shoulders" ? 'fill-orange-500 drop-shadow-[0_0_10px_rgba(249,115,22,0.8)]' : isDarkMode ? 'fill-gray-600 hover:fill-orange-400' : 'fill-gray-300 hover:fill-orange-400'}`} d="M 50 60 Q 100 40 150 60 L 140 80 L 60 80 Z" />
                                 
                                 {/* Chest */}
-                                <path onClick={() => setFilter("Chest")} className={`cursor-pointer transition-all duration-300 ${filter === "Chest" ? 'fill-lime-500 drop-shadow-[0_0_10px_rgba(132,204,22,0.8)]' : isDarkMode ? 'fill-gray-600 hover:fill-lime-400' : 'fill-gray-300 hover:fill-lime-400'}`} d="M 65 85 L 135 85 L 130 125 L 70 125 Z" />
+                                <path onClick={() => setFilter("Chest")} className={`cursor-pointer transition-all duration-300 ${filter === "Chest" ? 'fill-orange-500 drop-shadow-[0_0_10px_rgba(249,115,22,0.8)]' : isDarkMode ? 'fill-gray-600 hover:fill-orange-400' : 'fill-gray-300 hover:fill-orange-400'}`} d="M 65 85 L 135 85 L 130 125 L 70 125 Z" />
                                 
                                 {/* Core */}
-                                <path onClick={() => setFilter("Core")} className={`cursor-pointer transition-all duration-300 ${filter === "Core" ? 'fill-lime-500 drop-shadow-[0_0_10px_rgba(132,204,22,0.8)]' : isDarkMode ? 'fill-gray-600 hover:fill-lime-400' : 'fill-gray-300 hover:fill-lime-400'}`} d="M 72 130 L 128 130 L 120 170 L 80 170 Z" />
+                                <path onClick={() => setFilter("Core")} className={`cursor-pointer transition-all duration-300 ${filter === "Core" ? 'fill-orange-500 drop-shadow-[0_0_10px_rgba(249,115,22,0.8)]' : isDarkMode ? 'fill-gray-600 hover:fill-orange-400' : 'fill-gray-300 hover:fill-orange-400'}`} d="M 72 130 L 128 130 L 120 170 L 80 170 Z" />
                                 
                                 {/* Arms L */}
-                                <rect onClick={() => setFilter("Arms")} x="35" y="85" width="22" height="75" rx="10" className={`cursor-pointer transition-all duration-300 ${filter === "Arms" ? 'fill-lime-500 drop-shadow-[0_0_10px_rgba(132,204,22,0.8)]' : isDarkMode ? 'fill-gray-600 hover:fill-lime-400' : 'fill-gray-300 hover:fill-lime-400'}`} />
+                                <rect onClick={() => setFilter("Arms")} x="35" y="85" width="22" height="75" rx="10" className={`cursor-pointer transition-all duration-300 ${filter === "Arms" ? 'fill-orange-500 drop-shadow-[0_0_10px_rgba(249,115,22,0.8)]' : isDarkMode ? 'fill-gray-600 hover:fill-orange-400' : 'fill-gray-300 hover:fill-orange-400'}`} />
                                 {/* Arms R */}
-                                <rect onClick={() => setFilter("Arms")} x="143" y="85" width="22" height="75" rx="10" className={`cursor-pointer transition-all duration-300 ${filter === "Arms" ? 'fill-lime-500 drop-shadow-[0_0_10px_rgba(132,204,22,0.8)]' : isDarkMode ? 'fill-gray-600 hover:fill-lime-400' : 'fill-gray-300 hover:fill-lime-400'}`} />
+                                <rect onClick={() => setFilter("Arms")} x="143" y="85" width="22" height="75" rx="10" className={`cursor-pointer transition-all duration-300 ${filter === "Arms" ? 'fill-orange-500 drop-shadow-[0_0_10px_rgba(249,115,22,0.8)]' : isDarkMode ? 'fill-gray-600 hover:fill-orange-400' : 'fill-gray-300 hover:fill-orange-400'}`} />
                                 
                                 {/* Legs L */}
-                                <rect onClick={() => setFilter("Legs")} x="75" y="175" width="23" height="110" rx="10" className={`cursor-pointer transition-all duration-300 ${filter === "Legs" ? 'fill-lime-500 drop-shadow-[0_0_10px_rgba(132,204,22,0.8)]' : isDarkMode ? 'fill-gray-600 hover:fill-lime-400' : 'fill-gray-300 hover:fill-lime-400'}`} />
+                                <rect onClick={() => setFilter("Legs")} x="75" y="175" width="23" height="110" rx="10" className={`cursor-pointer transition-all duration-300 ${filter === "Legs" ? 'fill-orange-500 drop-shadow-[0_0_10px_rgba(249,115,22,0.8)]' : isDarkMode ? 'fill-gray-600 hover:fill-orange-400' : 'fill-gray-300 hover:fill-orange-400'}`} />
                                 {/* Legs R */}
-                                <rect onClick={() => setFilter("Legs")} x="102" y="175" width="23" height="110" rx="10" className={`cursor-pointer transition-all duration-300 ${filter === "Legs" ? 'fill-lime-500 drop-shadow-[0_0_10px_rgba(132,204,22,0.8)]' : isDarkMode ? 'fill-gray-600 hover:fill-lime-400' : 'fill-gray-300 hover:fill-lime-400'}`} />
+                                <rect onClick={() => setFilter("Legs")} x="102" y="175" width="23" height="110" rx="10" className={`cursor-pointer transition-all duration-300 ${filter === "Legs" ? 'fill-orange-500 drop-shadow-[0_0_10px_rgba(249,115,22,0.8)]' : isDarkMode ? 'fill-gray-600 hover:fill-orange-400' : 'fill-gray-300 hover:fill-orange-400'}`} />
                             </svg>
                         </div>
 
                         {/* Extra Filters (Not easily clickable on a front-facing 2D body) */}
                         <div className="flex flex-wrap justify-center gap-2 mt-6 w-full">
-                            <button onClick={() => setFilter("Back")} className={`text-xs font-bold px-4 py-2 rounded-lg transition-colors border ${filter === "Back" ? "bg-lime-500 text-black border-lime-500" : isDarkMode ? "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10" : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"}`}>Back</button>
-                            <button onClick={() => setFilter("Cardio")} className={`text-xs font-bold px-4 py-2 rounded-lg transition-colors border flex items-center gap-1 ${filter === "Cardio" ? "bg-lime-500 text-black border-lime-500" : isDarkMode ? "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10" : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"}`}><FaRunning/> Cardio</button>
-                            <button onClick={() => setFilter("Full Body")} className={`text-xs font-bold px-4 py-2 rounded-lg transition-colors border flex items-center gap-1 ${filter === "Full Body" ? "bg-lime-500 text-black border-lime-500" : isDarkMode ? "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10" : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"}`}><FaFire/> Full Body</button>
-                            <button onClick={() => setFilter("All Muscles")} className={`text-xs font-bold px-4 py-2 rounded-lg transition-colors border flex items-center gap-1 w-full justify-center mt-2 ${filter === "All Muscles" ? "bg-emerald-500 text-black border-emerald-500" : isDarkMode ? "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10" : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"}`}><FaLayerGroup/> View All</button>
+                            <button onClick={() => setFilter("Back")} className={`text-xs font-bold px-4 py-2 rounded-lg transition-colors border ${filter === "Back" ? "bg-orange-500 text-black border-orange-500" : isDarkMode ? "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10" : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"}`}>Back</button>
+                            <button onClick={() => setFilter("Cardio")} className={`text-xs font-bold px-4 py-2 rounded-lg transition-colors border flex items-center gap-1 ${filter === "Cardio" ? "bg-orange-500 text-black border-orange-500" : isDarkMode ? "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10" : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"}`}><FaRunning/> Cardio</button>
+                            <button onClick={() => setFilter("Full Body")} className={`text-xs font-bold px-4 py-2 rounded-lg transition-colors border flex items-center gap-1 ${filter === "Full Body" ? "bg-orange-500 text-black border-orange-500" : isDarkMode ? "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10" : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"}`}><FaFire/> Full Body</button>
+                            <button onClick={() => setFilter("All Muscles")} className={`text-xs font-bold px-4 py-2 rounded-lg transition-colors border flex items-center gap-1 w-full justify-center mt-2 ${filter === "All Muscles" ? "bg-rose-500 text-black border-rose-500" : isDarkMode ? "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10" : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"}`}><FaLayerGroup/> View All</button>
                         </div>
                     </div>
 
@@ -196,7 +196,7 @@ export default function Explore() {
                                 placeholder={`Search in ${filter}...`}
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className={`w-full p-4 rounded-2xl outline-none border transition-all focus:border-lime-500 shadow-sm ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-500 focus:bg-white/10" : "bg-white text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-gray-50"}`}
+                                className={`w-full p-4 rounded-2xl outline-none border transition-all focus:border-orange-500 shadow-sm ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-500 focus:bg-white/10" : "bg-white text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-gray-50"}`}
                             />
                             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs font-bold uppercase tracking-wider">{filtered.length} Found</span>
                         </div>
@@ -208,15 +208,15 @@ export default function Explore() {
                                 </div>
                             ) : (
                                 filtered.map((ex, i) => (
-                                    <div key={i} className={`backdrop-blur-xl border p-5 rounded-3xl shadow-lg relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 ${isDarkMode ? "bg-white/5 border-white/10 hover:border-lime-500/30 hover:shadow-[0_0_30px_rgba(132,204,22,0.1)]" : "bg-white border-gray-200 hover:border-lime-500/50 hover:shadow-xl"}`}>
-                                        <div className="absolute top-0 right-0 w-32 h-32 bg-lime-500/5 rounded-full blur-[50px] group-hover:bg-lime-500/20 transition-all duration-500 pointer-events-none"></div>
+                                    <div key={i} className={`backdrop-blur-xl border p-5 rounded-3xl shadow-lg relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 ${isDarkMode ? "bg-white/5 border-white/10 hover:border-orange-500/30 hover:shadow-[0_0_30px_rgba(249,115,22,0.1)]" : "bg-white border-gray-200 hover:border-orange-500/50 hover:shadow-xl"}`}>
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 rounded-full blur-[50px] group-hover:bg-orange-500/20 transition-all duration-500 pointer-events-none"></div>
                                         
                                         <div className="flex justify-between items-start mb-3 relative z-10">
                                             <div>
                                                 <h2 className={`text-xl font-bold mb-1.5 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{ex.name}</h2>
                                                 <div className="flex flex-wrap gap-1.5">
-                                                    <span className={`px-2 py-0.5 text-[9px] font-bold rounded-md tracking-wider uppercase ${isDarkMode ? "bg-white/10 text-lime-400" : "bg-lime-100 text-lime-700"}`}>{ex.type}</span>
-                                                    <span className={`px-2 py-0.5 text-[9px] font-bold rounded-md tracking-wider uppercase ${isDarkMode ? "bg-white/10 text-emerald-400" : "bg-emerald-100 text-emerald-700"}`}>{ex.level}</span>
+                                                    <span className={`px-2 py-0.5 text-[9px] font-bold rounded-md tracking-wider uppercase ${isDarkMode ? "bg-white/10 text-orange-400" : "bg-orange-100 text-orange-700"}`}>{ex.type}</span>
+                                                    <span className={`px-2 py-0.5 text-[9px] font-bold rounded-md tracking-wider uppercase ${isDarkMode ? "bg-white/10 text-rose-400" : "bg-rose-100 text-rose-700"}`}>{ex.level}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -224,12 +224,12 @@ export default function Explore() {
                                         <div className="space-y-3 relative z-10">
                                             <p className={`text-sm leading-relaxed ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>{ex.desc}</p>
                                             <div className={`p-2.5 rounded-xl border ${isDarkMode ? "bg-black/40 border-white/5" : "bg-gray-50 border-gray-200"}`}>
-                                                <p className="text-lime-500 text-[10px] font-bold uppercase tracking-wider mb-0.5">💡 Pro Tip</p>
+                                                <p className="text-orange-500 text-[10px] font-bold uppercase tracking-wider mb-0.5">💡 Pro Tip</p>
                                                 <p className={`text-xs ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>{ex.tip}</p>
                                             </div>
                                             <button
                                                 onClick={() => navigate("/plan", { state: { exercise: ex } })}
-                                                className={`w-full mt-2 font-bold px-4 py-2.5 rounded-xl text-sm transition-all duration-300 border shadow-sm flex items-center justify-center gap-2 hover:scale-105 active:scale-95 ${isDarkMode ? "bg-white/10 text-white border-white/20 hover:bg-lime-500 hover:text-black hover:border-lime-500" : "bg-white text-gray-800 border-gray-200 hover:bg-lime-500 hover:text-black hover:border-lime-500"}`}
+                                                className={`w-full mt-2 font-bold px-4 py-2.5 rounded-xl text-sm transition-all duration-300 border shadow-sm flex items-center justify-center gap-2 hover:scale-105 active:scale-95 ${isDarkMode ? "bg-white/10 text-white border-white/20 hover:bg-orange-500 hover:text-black hover:border-orange-500" : "bg-white text-gray-800 border-gray-200 hover:bg-orange-500 hover:text-black hover:border-orange-500"}`}
                                             >
                                                 + Add to Plan
                                             </button>

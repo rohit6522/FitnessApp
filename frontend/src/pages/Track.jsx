@@ -90,8 +90,8 @@ export default function Track() {
             return (
                 <div className={`border p-3 rounded-xl shadow-xl backdrop-blur-md ${isDarkMode ? "bg-[#111] border-white/10" : "bg-white border-gray-200"}`}>
                     <p className={`font-bold mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{label}</p>
-                    <p className="text-lime-500 font-medium flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-lime-500 inline-block"></span>
+                    <p className="text-orange-500 font-medium flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-orange-500 inline-block"></span>
                         {payload[0].value} {payload[0].value === 1 ? 'workout' : 'workouts'}
                     </p>
                 </div>
@@ -108,20 +108,20 @@ export default function Track() {
     return (
         <div className={`min-h-screen relative overflow-hidden p-4 md:p-6 transition-colors duration-500 ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
             {/* Glowing Orbs for Aesthetic */}
-            <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-lime-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
-            <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
+            <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-orange-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-rose-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
 
             <div className="max-w-6xl mx-auto relative z-10">
                 <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
 
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 mt-6">
                     <h1 className={`text-4xl font-black tracking-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-                        Workout <span className="text-lime-500">Tracker</span>
+                        Workout <span className="text-orange-500">Tracker</span>
                     </h1>
 
                     <button
                         onClick={() => setShow(true)}
-                        className={`font-bold px-6 py-3 rounded-xl border transition-all duration-300 hover:bg-lime-500 hover:text-black hover:border-lime-500 shadow-lg ${isDarkMode ? "bg-white/10 text-white border-white/20" : "bg-white text-gray-800 border-gray-200"}`}
+                        className={`font-bold px-6 py-3 rounded-xl border transition-all duration-300 hover:bg-orange-500 hover:text-black hover:border-orange-500 shadow-lg ${isDarkMode ? "bg-white/10 text-white border-white/20" : "bg-white text-gray-800 border-gray-200"}`}
                     >
                         + Log Workout
                     </button>
@@ -129,8 +129,8 @@ export default function Track() {
 
                 {/* GRAPH */}
                 <div className={`backdrop-blur-xl border p-6 rounded-3xl shadow-lg mb-8 relative overflow-hidden group transition-colors duration-500 ${isDarkMode ? "bg-white/5 border-white/10" : "bg-white border-gray-200"}`}>
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-lime-500/10 rounded-full blur-[50px] group-hover:bg-lime-500/20 transition-all duration-500 pointer-events-none"></div>
-                    <h2 className={`text-2xl font-bold mb-6 relative z-10 ${isDarkMode ? "text-white" : "text-gray-900"}`}>This Week's <span className="text-lime-500">Activity</span></h2>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-[50px] group-hover:bg-orange-500/20 transition-all duration-500 pointer-events-none"></div>
+                    <h2 className={`text-2xl font-bold mb-6 relative z-10 ${isDarkMode ? "text-white" : "text-gray-900"}`}>This Week's <span className="text-orange-500">Activity</span></h2>
 
                     <div className="relative z-10">
                         <ResponsiveContainer width="100%" height={300}>
@@ -138,14 +138,14 @@ export default function Track() {
                                 <XAxis dataKey="day" stroke="#9ca3af" tick={{fill: '#9ca3af'}} axisLine={false} tickLine={false} />
                                 <YAxis stroke="#9ca3af" tick={{fill: '#9ca3af'}} axisLine={false} tickLine={false} allowDecimals={false} />
                                 <Tooltip content={<CustomTooltip />} cursor={{fill: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}} />
-                                <Bar dataKey="workouts" fill="#84cc16" radius={[6, 6, 0, 0]} barSize={40} />
+                                <Bar dataKey="workouts" fill="#f97316" radius={[6, 6, 0, 0]} barSize={40} />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
 
                 {/* RECENT */}
-                <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Recent <span className="text-emerald-500">Workouts</span></h2>
+                <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Recent <span className="text-rose-500">Workouts</span></h2>
 
                 <div className="space-y-4">
                     {logs.length === 0 ? (
@@ -159,7 +159,7 @@ export default function Track() {
                             <div key={l._id} className={`backdrop-blur-xl border p-5 rounded-2xl shadow-lg flex justify-between items-center transition-all duration-300 hover:-translate-y-1 ${isDarkMode ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-white border-gray-200 hover:bg-gray-50"}`}>
                                 <div>
                                     <p className={`text-xl font-bold mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{l.workoutName}</p>
-                                    <p className={`text-sm font-medium inline-block px-2 py-0.5 rounded-md ${isDarkMode ? "text-lime-500 bg-lime-500/10" : "text-lime-700 bg-lime-100"}`}>
+                                    <p className={`text-sm font-medium inline-block px-2 py-0.5 rounded-md ${isDarkMode ? "text-orange-500 bg-orange-500/10" : "text-orange-700 bg-orange-100"}`}>
                                         {new Date(l.date).toLocaleDateString()}
                                     </p>
                                 </div>
@@ -178,7 +178,7 @@ export default function Track() {
             {show && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                     <div className={`border w-full max-w-md p-8 rounded-3xl shadow-2xl animate-fadeIn relative overflow-hidden ${isDarkMode ? "bg-[#0a0a0a] border-white/10" : "bg-white border-gray-200"}`}>
-                        <div className="absolute top-[-20%] right-[-20%] w-48 h-48 bg-lime-500/20 rounded-full blur-[80px] pointer-events-none"></div>
+                        <div className="absolute top-[-20%] right-[-20%] w-48 h-48 bg-orange-500/20 rounded-full blur-[80px] pointer-events-none"></div>
 
                         <div className="flex justify-between items-center mb-6 relative z-10">
                             <h2 className={`text-2xl font-black tracking-tight ${isDarkMode ? "text-white" : "text-gray-900"}`}>Log Workout</h2>
@@ -191,7 +191,7 @@ export default function Track() {
                                 <input
                                     value={form.workoutName}
                                     placeholder="e.g., Upper Body Power"
-                                    className={`w-full p-3.5 rounded-xl outline-none border transition-all focus:border-lime-500 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
+                                    className={`w-full p-3.5 rounded-xl outline-none border transition-all focus:border-orange-500 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
                                     onChange={e => setForm({ ...form, workoutName: e.target.value })}
                                 />
                             </div>
@@ -202,7 +202,7 @@ export default function Track() {
                                     type="number"
                                     value={form.duration}
                                     placeholder="45"
-                                    className={`w-full p-3.5 rounded-xl outline-none border transition-all focus:border-lime-500 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
+                                    className={`w-full p-3.5 rounded-xl outline-none border transition-all focus:border-orange-500 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
                                     onChange={e => setForm({ ...form, duration: e.target.value })}
                                 />
                             </div>
@@ -213,14 +213,14 @@ export default function Track() {
                                     type="number"
                                     value={form.calories}
                                     placeholder="300"
-                                    className={`w-full p-3.5 rounded-xl outline-none border transition-all focus:border-lime-500 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
+                                    className={`w-full p-3.5 rounded-xl outline-none border transition-all focus:border-orange-500 ${isDarkMode ? "bg-white/5 text-white border-white/10 placeholder-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 border-gray-200 placeholder-gray-400 focus:bg-white"}`}
                                     onChange={e => setForm({ ...form, calories: e.target.value })}
                                 />
                             </div>
 
                             <button
                                 onClick={addLog}
-                                className="w-full bg-gradient-to-r from-lime-500 to-emerald-500 text-black font-extrabold text-lg py-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(132,204,22,0.4)] active:scale-95 mt-6"
+                                className="w-full bg-gradient-to-r from-orange-500 to-rose-500 text-black font-extrabold text-lg py-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] active:scale-95 mt-6"
                             >
                                 SAVE LOG
                             </button>

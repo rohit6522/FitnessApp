@@ -75,21 +75,19 @@ exports.generateWorkout = async (req, res) => {
     try {
         const client = getGeminiClient();
         const { prompt } = req.body;
-        const model = client.getGenerativeModel({ model: "gemini-1.5-flash" });
         
-        const fullPrompt = `You are an expert fitness coach. Create a workout plan based on this request: "${prompt}". 
-        Return ONLY valid JSON with this exact structure, with no markdown code blocks around it: 
+        // Force Gemini into strict JSON generation mode
+        const model = client.getGenerativeModel({ 
+            model: "gemini-1.5-flash",
+            generationConfig: { responseMimeType: "application/json" }
+        });
+        
+        const fullPrompt = `You are an expert fitness coach. Create a workout plan based on this request: "${prompt}".
+        Return a valid JSON object with this exact structure: 
         { "name": "Workout Name", "type": "Strength", "exercises": [ { "name": "Exercise Name", "sets": 3, "reps": 12, "time": 0 } ] }`;
         
         const result = await model.generateContent(fullPrompt);
-        let text = result.response.text().trim();
-        
-        // Clean up markdown formatting if Gemini includes it
-        if (text.startsWith("```json")) text = text.replace(/^```json/, "");
-        if (text.startsWith("```")) text = text.replace(/^```/, "");
-        if (text.endsWith("```")) text = text.replace(/```$/, "");
-        
-        const plan = JSON.parse(text.trim());
+        const plan = JSON.parse(result.response.text());
         res.json(plan);
     } catch (err) {
         console.error("Generate Workout Error:", err);
