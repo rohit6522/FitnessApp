@@ -219,17 +219,17 @@ export default function Profile() {
                 <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
 
                 {/* SMART REMINDER CARD */}
-                <div className={`max-w-3xl mx-auto backdrop-blur-xl border p-6 md:p-8 rounded-[2rem] shadow-lg relative overflow-hidden mt-6 transition-all duration-700 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] hover:border-blue-500/30 flex flex-col md:flex-row items-center justify-between gap-6 ${isDarkMode ? "bg-gradient-to-br from-blue-900/10 to-purple-900/10 border-white/10" : "bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-100"}`}>
-                    <div className="absolute top-[-50%] left-[-10%] w-48 h-48 bg-blue-500/20 rounded-full blur-[80px] pointer-events-none"></div>
+                <div className={`max-w-3xl mx-auto backdrop-blur-xl border p-6 md:p-8 rounded-[2rem] shadow-lg relative overflow-hidden mt-6 transition-all duration-700 hover:shadow-[0_0_30px_rgba(249,115,22,0.15)] hover:border-orange-500/30 flex flex-col md:flex-row items-center justify-between gap-6 ${isDarkMode ? "bg-gradient-to-br from-orange-900/10 to-rose-900/10 border-white/10" : "bg-gradient-to-br from-orange-50 to-rose-50 border-orange-100"}`}>
+                    <div className="absolute top-[-50%] left-[-10%] w-48 h-48 bg-orange-500/20 rounded-full blur-[80px] pointer-events-none"></div>
                     
                     <div className="relative z-10">
                         <h2 className={`text-2xl font-black tracking-tight flex items-center gap-2 mb-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-                            ⏰ Daily <span className="text-blue-500">Workout Reminder</span>
+                            ⏰ Daily <span className="text-orange-500">Workout Reminder</span>
                         </h2>
                         <p className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
                             Get a daily email alert so you never miss a workout!
                             {savedTime && (
-                                <span className="block mt-1 font-bold text-blue-500 bg-blue-500/10 w-fit px-3 py-1 rounded-lg border border-blue-500/20">
+                                <span className="block mt-1 font-bold text-orange-500 bg-orange-500/10 w-fit px-3 py-1 rounded-lg border border-orange-500/20">
                                     Active Alarm: {formatAMPM(savedTime)}
                                 </span>
                             )}
@@ -241,11 +241,11 @@ export default function Profile() {
                             type="time"
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
-                            className={`p-3.5 rounded-xl outline-none border transition-all focus:border-blue-500 flex-1 md:w-40 font-bold ${isDarkMode ? "bg-black/40 text-white border-white/10" : "bg-white text-gray-900 border-gray-200 shadow-sm"}`}
+                            className={`p-3.5 rounded-xl outline-none border transition-all focus:border-orange-500 flex-1 md:w-40 font-bold ${isDarkMode ? "bg-black/40 text-white border-white/10" : "bg-white text-gray-900 border-gray-200 shadow-sm"}`}
                         />
                         <button
                             onClick={setReminder}
-                            className="bg-gradient-to-r from-blue-500 to-cyan-500 text-black font-extrabold px-6 py-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] active:scale-95 whitespace-nowrap"
+                            className="bg-gradient-to-r from-orange-500 to-rose-500 text-black font-extrabold px-6 py-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] active:scale-95 whitespace-nowrap"
                         >
                             Set Alert
                         </button>

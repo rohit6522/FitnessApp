@@ -110,7 +110,7 @@ export default function Explore() {
     }
 
     return (
-        <div className={`min-h-screen relative overflow-hidden p-4 md:p-6 transition-colors duration-500 ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
+        <div className={`min-h-screen relative overflow-hidden p-4 md:p-6 transition-colors duration-500 animate-fadeIn ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
             {/* Glowing Orbs for Aesthetic */}
             <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-orange-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
             <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-rose-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>

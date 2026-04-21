@@ -4,7 +4,7 @@ import { API } from "../api"
 import { toast } from "sonner"
 
 import { useNavigate, useLocation } from "react-router-dom"
-import { FaPlus, FaEdit, FaTrash, FaDumbbell, FaCheckCircle, FaTimes, FaCalendarAlt, FaMagic, FaSpinner } from "react-icons/fa"
+import { FaPlus, FaEdit, FaTrash, FaDumbbell, FaCheckCircle, FaTimes, FaCalendarAlt, FaMagic, FaSpinner, FaPlay, FaStopwatch } from "react-icons/fa"
 
 
 export default function Plan() {
@@ -41,6 +41,10 @@ export default function Plan() {
     const [showAiInput, setShowAiInput] = useState(false)
     
     const [trackedLogs, setTrackedLogs] = useState([])
+    
+    const [activeWorkout, setActiveWorkout] = useState(null)
+    const [workoutStartTime, setWorkoutStartTime] = useState(null)
+    const [restTimer, setRestTimer] = useState(0)
 
 
     // FETCH
@@ -203,13 +207,58 @@ export default function Plan() {
         }
     }
 
+    // LIVE WORKOUT TIMER EFFECT
+    useEffect(() => {
+        let interval;
+        if (restTimer > 0) {
+            interval = setInterval(() => setRestTimer(prev => prev - 1), 1000);
+        }
+        return () => clearInterval(interval);
+    }, [restTimer]);
+
+    const startWorkout = (w) => {
+        setActiveWorkout(w);
+        setWorkoutStartTime(Date.now());
+        setRestTimer(0);
+    };
+
+    const formatTime = (seconds) => {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m}:${s < 10 ? '0' : ''}${s}`;
+    };
+
+    const finishActiveWorkout = async () => {
+        if (!activeWorkout) return;
+        const durationMins = Math.max(1, Math.round((Date.now() - workoutStartTime) / 60000));
+        const calPerMin = activeWorkout.type === "HIIT" ? 10 : activeWorkout.type === "Cardio" ? 8 : 6;
+        const calories = durationMins * calPerMin;
+
+        try {
+            await API.post("/track", {
+                workoutName: activeWorkout.name,
+                duration: durationMins,
+                calories: calories,
+                userId: user._id || user.id,
+                date: new Date()
+            });
+            toast.success(`Workout completed! Logged ${durationMins} min & ${calories} kcal 🔥`);
+            setActiveWorkout(null);
+            // Refresh logs for calendar
+            const res = await API.get(`/track/${user._id || user.id}`);
+            setTrackedLogs(Array.isArray(res.data) ? res.data : []);
+        } catch (err) {
+            toast.error("Failed to log workout.");
+        }
+    };
+
     const toggleTheme = () => {
         setIsDarkMode(!isDarkMode);
         localStorage.setItem("theme", !isDarkMode ? "dark" : "light");
     }
 
     return (
-        <div className={`min-h-screen relative overflow-hidden p-4 md:p-6 transition-colors duration-500 ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
+        <div className={`min-h-screen relative overflow-hidden p-4 md:p-6 transition-colors duration-500 animate-fadeIn ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
             {/* Glowing Orbs for Aesthetic */}
             <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-orange-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-rose-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "1s" }}></div>
@@ -286,6 +335,14 @@ export default function Plan() {
                                     </div>
 
                                     <div className="flex gap-2">
+                                        <button
+                                            onClick={() => startWorkout(w)}
+                                            className={`p-2.5 rounded-xl transition-all duration-300 ${isDarkMode ? "bg-green-500/10 text-green-400 hover:bg-green-500/20 hover:scale-110" : "bg-green-50 text-green-600 hover:bg-green-100 hover:scale-110"}`}
+                                            title="Start Live Workout"
+                                        >
+                                            <FaPlay />
+                                        </button>
+
                                         <button
                                             onClick={() => openEdit(w)}
                                             className={`p-2.5 rounded-xl transition-all duration-300 ${isDarkMode ? "bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 hover:scale-110" : "bg-blue-50 text-blue-600 hover:bg-blue-100 hover:scale-110"}`}
@@ -593,6 +650,57 @@ export default function Plan() {
             )}
 
 
+
+            {/* ACTIVE LIVE WORKOUT MODAL */}
+            {activeWorkout && (
+                <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[9999] p-4">
+                    <div className={`border w-full max-w-2xl p-6 md:p-10 rounded-[2.5rem] shadow-2xl animate-fadeIn relative overflow-y-auto max-h-[90vh] ${isDarkMode ? "bg-[#0a0a0a] border-white/10" : "bg-white border-gray-200"}`}>
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+                        
+                        <div className="flex justify-between items-center mb-8 relative z-10">
+                            <div>
+                                <h2 className="text-3xl font-black tracking-tight text-green-500 flex items-center gap-3">
+                                    <div className="w-3 h-3 bg-green-500 rounded-full animate-ping"></div> Live Workout
+                                </h2>
+                                <p className={`text-lg font-bold mt-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{activeWorkout.name}</p>
+                            </div>
+                            <button onClick={() => setActiveWorkout(null)} className={`transition-all p-3 rounded-xl ${isDarkMode ? "text-gray-400 hover:text-white bg-white/5 hover:bg-white/10" : "text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200"}`}>
+                                <FaTimes />
+                            </button>
+                        </div>
+
+                        {restTimer > 0 && (
+                            <div className="mb-8 p-6 rounded-2xl bg-orange-500 text-black flex flex-col items-center justify-center animate-pulse shadow-[0_0_30px_rgba(249,115,22,0.4)] relative z-10">
+                                <FaStopwatch className="text-4xl mb-2" />
+                                <p className="text-sm font-bold uppercase tracking-widest mb-1">Rest Time</p>
+                                <p className="text-5xl font-black tabular-nums">{formatTime(restTimer)}</p>
+                            </div>
+                        )}
+
+                        <div className="space-y-4 relative z-10 mb-8">
+                            {activeWorkout.exercises?.map((ex, i) => (
+                                <div key={i} className={`p-5 rounded-2xl border transition-colors ${isDarkMode ? "bg-white/5 border-white/10" : "bg-gray-50 border-gray-200"}`}>
+                                    <div className="flex justify-between items-center mb-4">
+                                        <h3 className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>{ex.name}</h3>
+                                        <span className={`px-3 py-1 rounded-lg text-xs font-bold ${isDarkMode ? "bg-white/10 text-gray-300" : "bg-gray-200 text-gray-700"}`}>{ex.sets} Sets x {ex.reps} Reps</span>
+                                    </div>
+                                    <div className="flex flex-wrap gap-3">
+                                        {Array.from({ length: Number(ex.sets) || 1 }).map((_, setIdx) => (
+                                            <button key={setIdx} onClick={() => setRestTimer(60)} className={`flex-1 min-w-[60px] py-3 rounded-xl font-bold border-2 transition-all active:scale-95 flex justify-center items-center gap-1 ${isDarkMode ? "border-green-500/50 text-green-400 hover:bg-green-500/20" : "border-green-500 text-green-600 hover:bg-green-50"}`}>
+                                                Set {setIdx + 1}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <button onClick={finishActiveWorkout} className="w-full bg-green-500 text-black font-extrabold text-xl py-4 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] active:scale-95 relative z-10">
+                            FINISH & LOG WORKOUT
+                        </button>
+                    </div>
+                </div>
+            )}
 
         </div>
  
