@@ -50,6 +50,9 @@ export default function Dashboard() {
         calories: 0,
         streak: 0
     })
+    const [muscleFatigue, setMuscleFatigue] = useState({
+        Chest: 0, Back: 0, Legs: 0, Arms: 0, Shoulders: 0, Core: 0
+    })
 
 
 
@@ -126,6 +129,34 @@ export default function Dashboard() {
                     calories: todayCalories,
                     streak: streak
                 })
+
+                // --- RECOVERY HEATMAP LOGIC ---
+                const fatigue = { Chest: 0, Back: 0, Legs: 0, Arms: 0, Shoulders: 0, Core: 0 }
+                const nowTime = now.getTime()
+                logs.forEach(log => {
+                    const logTime = new Date(log.date).getTime()
+                    const diffHours = (nowTime - logTime) / (1000 * 60 * 60)
+                    
+                    let fatigueValue = 0
+                    if (diffHours <= 24) fatigueValue = 2 // Highly fatigued
+                    else if (diffHours <= 48) fatigueValue = 1 // Recovering
+                    else return // > 48h means fully rested
+
+                    const name = (log.workoutName || "").toLowerCase()
+                    const apply = (m) => { fatigue[m] = Math.max(fatigue[m], fatigueValue) }
+
+                    if (name.includes("chest") || name.includes("push")) apply("Chest")
+                    if (name.includes("back") || name.includes("pull")) apply("Back")
+                    if (name.includes("leg") || name.includes("lower") || name.includes("squat") || name.includes("cardio")) apply("Legs")
+                    if (name.includes("arm") || name.includes("bicep") || name.includes("tricep")) apply("Arms")
+                    if (name.includes("shoulder") || name.includes("delt")) apply("Shoulders")
+                    if (name.includes("core") || name.includes("ab") || name.includes("hiit")) apply("Core")
+                    if (name.includes("full") || name.includes("hiit")) {
+                        apply("Chest"); apply("Back"); apply("Legs"); apply("Arms"); apply("Shoulders"); apply("Core");
+                    }
+                })
+                setMuscleFatigue(fatigue)
+
             } catch (err) {
                 console.error("Error fetching stats:", err)
             }
@@ -343,6 +374,13 @@ export default function Dashboard() {
         localStorage.setItem("theme", !isDarkMode ? "dark" : "light");
     }
 
+    const getMuscleColor = (muscle) => {
+        const level = muscleFatigue[muscle] || 0;
+        if (level === 2) return "fill-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]";
+        if (level === 1) return "fill-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]";
+        return isDarkMode ? "fill-green-500 drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]" : "fill-green-400 drop-shadow-[0_0_5px_rgba(34,197,94,0.6)]";
+    };
+
     return (
         <div className={`min-h-screen relative overflow-hidden p-4 md:p-6 transition-colors duration-500 animate-fadeIn ${isDarkMode ? "bg-gray-950" : "bg-gray-50"}`}>
             {/* Glowing Orbs for Aesthetic */}
@@ -439,36 +477,75 @@ export default function Dashboard() {
                             
                         </div>
 
-                        {/* ACTION CARDS */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div
-                                onClick={() => navigate("/plan")}
-                                className={`group cursor-pointer backdrop-blur-xl border p-6 rounded-[2rem] shadow-lg relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(249,115,22,0.4)] ${isDarkMode ? "bg-white/5 border-white/10 hover:border-orange-500/50 hover:bg-orange-500/5" : "bg-white border-gray-200 hover:border-orange-500/50 hover:bg-orange-50"}`}
-                            >
-                                <div className="absolute top-0 right-0 w-48 h-48 bg-orange-500/10 rounded-full blur-[60px] group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
-                                <div className="relative z-10 flex items-center justify-between">
-                                    <div>
-                                        <h3 className={`text-xl font-black mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>My Workout Plan</h3>
-                                        <p className={`font-medium text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>View and edit your daily schedule</p>
+                        {/* RECOVERY HEATMAP & ACTION CARDS */}
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                            
+                            {/* MUSCLE RECOVERY HEATMAP */}
+                            <div className={`backdrop-blur-xl border p-6 rounded-[2rem] shadow-lg relative overflow-hidden group transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_15px_30px_-10px_rgba(249,115,22,0.3)] ${isDarkMode ? "bg-white/5 border-white/10 hover:border-orange-500/30" : "bg-white border-gray-200 hover:border-orange-500/50"}`}>
+                                <h3 className={`text-xl font-black mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Muscle <span className="text-orange-500">Recovery</span></h3>
+                                <p className={`font-medium text-xs mb-4 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Live fatigue tracking (48h)</p>
+                                
+                                <div className="flex justify-center mb-5">
+                                    <div className="relative w-36 h-auto drop-shadow-2xl">
+                                        <svg viewBox="0 0 200 320" className="w-full h-full">
+                                            {/* Head */}
+                                            <circle cx="100" cy="30" r="22" className={`${isDarkMode ? 'fill-gray-700' : 'fill-gray-200'} pointer-events-none`} />
+                                            {/* Shoulders */}
+                                            <path className={`transition-all duration-700 ${getMuscleColor("Shoulders")}`} d="M 50 60 Q 100 40 150 60 L 140 80 L 60 80 Z" />
+                                            {/* Chest */}
+                                            <path className={`transition-all duration-700 ${getMuscleColor("Chest")}`} d="M 65 85 L 135 85 L 130 125 L 70 125 Z" />
+                                            {/* Core */}
+                                            <path className={`transition-all duration-700 ${getMuscleColor("Core")}`} d="M 72 130 L 128 130 L 120 170 L 80 170 Z" />
+                                            {/* Arms L */}
+                                            <rect x="35" y="85" width="22" height="75" rx="10" className={`transition-all duration-700 ${getMuscleColor("Arms")}`} />
+                                            {/* Arms R */}
+                                            <rect x="143" y="85" width="22" height="75" rx="10" className={`transition-all duration-700 ${getMuscleColor("Arms")}`} />
+                                            {/* Legs L */}
+                                            <rect x="75" y="175" width="23" height="110" rx="10" className={`transition-all duration-700 ${getMuscleColor("Legs")}`} />
+                                            {/* Legs R */}
+                                            <rect x="102" y="175" width="23" height="110" rx="10" className={`transition-all duration-700 ${getMuscleColor("Legs")}`} />
+                                        </svg>
                                     </div>
-                                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-400 to-rose-500 text-black flex items-center justify-center text-xl shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                                        <FaClipboardList />
-                                    </div>
+                                </div>
+
+                                <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider px-2">
+                                    <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.8)]"></div> Rested</div>
+                                    <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-yellow-500 shadow-[0_0_5px_rgba(234,179,8,0.8)]"></div> Recover</div>
+                                    <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.8)]"></div> Fatigued</div>
                                 </div>
                             </div>
 
-                            <div
-                                onClick={() => navigate("/explore")}
-                                className={`group cursor-pointer backdrop-blur-xl border p-6 rounded-[2rem] shadow-lg relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(244,63,94,0.4)] ${isDarkMode ? "bg-white/5 border-white/10 hover:border-rose-500/50 hover:bg-rose-500/5" : "bg-white border-gray-200 hover:border-rose-500/50 hover:bg-rose-50"}`}
-                            >
-                                <div className="absolute top-0 right-0 w-48 h-48 bg-rose-500/10 rounded-full blur-[60px] group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
-                                <div className="relative z-10 flex items-center justify-between">
-                                    <div>
-                                        <h3 className={`text-xl font-black mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Browse Exercises</h3>
-                                        <p className={`font-medium text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Discover routines & form tips</p>
+                            {/* ACTION CARDS */}
+                            <div className="lg:col-span-2 flex flex-col gap-4">
+                                <div
+                                    onClick={() => navigate("/plan")}
+                                    className={`group cursor-pointer backdrop-blur-xl border p-6 rounded-[2rem] shadow-lg relative overflow-hidden transition-all duration-500 flex-1 flex flex-col justify-center hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(249,115,22,0.4)] ${isDarkMode ? "bg-white/5 border-white/10 hover:border-orange-500/50 hover:bg-orange-500/5" : "bg-white border-gray-200 hover:border-orange-500/50 hover:bg-orange-50"}`}
+                                >
+                                    <div className="absolute top-0 right-0 w-48 h-48 bg-orange-500/10 rounded-full blur-[60px] group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
+                                    <div className="relative z-10 flex items-center justify-between">
+                                        <div>
+                                            <h3 className={`text-xl font-black mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>My Workout Plan</h3>
+                                            <p className={`font-medium text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>View and edit your daily schedule</p>
+                                        </div>
+                                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-400 to-rose-500 text-black flex items-center justify-center text-xl shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                                            <FaClipboardList />
+                                        </div>
                                     </div>
-                                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-rose-400 to-pink-500 text-black flex items-center justify-center text-xl shadow-lg group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300">
-                                        <FaSearch />
+                                </div>
+
+                                <div
+                                    onClick={() => navigate("/explore")}
+                                    className={`group cursor-pointer backdrop-blur-xl border p-6 rounded-[2rem] shadow-lg relative overflow-hidden transition-all duration-500 flex-1 flex flex-col justify-center hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(244,63,94,0.4)] ${isDarkMode ? "bg-white/5 border-white/10 hover:border-rose-500/50 hover:bg-rose-500/5" : "bg-white border-gray-200 hover:border-rose-500/50 hover:bg-rose-50"}`}
+                                >
+                                    <div className="absolute top-0 right-0 w-48 h-48 bg-rose-500/10 rounded-full blur-[60px] group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
+                                    <div className="relative z-10 flex items-center justify-between">
+                                        <div>
+                                            <h3 className={`text-xl font-black mb-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Browse Exercises</h3>
+                                            <p className={`font-medium text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Discover routines & form tips</p>
+                                        </div>
+                                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-rose-400 to-pink-500 text-black flex items-center justify-center text-xl shadow-lg group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300">
+                                            <FaSearch />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

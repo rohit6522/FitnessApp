@@ -207,11 +207,29 @@ export default function Plan() {
         }
     }
 
+    // 🗣️ VOICE COACH HELPER
+    const speak = (text) => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // Cancel any current speech
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.0; // Normal speaking speed
+            window.speechSynthesis.speak(utterance);
+        }
+    };
+
     // LIVE WORKOUT TIMER EFFECT
     useEffect(() => {
         let interval;
         if (restTimer > 0) {
-            interval = setInterval(() => setRestTimer(prev => prev - 1), 1000);
+            if (restTimer === 60) speak("Set complete. Rest for 60 seconds.");
+            if (restTimer === 10) speak("10 seconds left. Get ready.");
+
+            interval = setInterval(() => {
+                setRestTimer(prev => {
+                    if (prev === 1) speak("Rest complete. Let's work!");
+                    return prev - 1;
+                });
+            }, 1000);
         }
         return () => clearInterval(interval);
     }, [restTimer]);
@@ -220,6 +238,7 @@ export default function Plan() {
         setActiveWorkout(w);
         setWorkoutStartTime(Date.now());
         setRestTimer(0);
+        speak(`Starting ${w.name}. Let's get it!`);
     };
 
     const formatTime = (seconds) => {
@@ -243,6 +262,7 @@ export default function Plan() {
                 date: new Date()
             });
             toast.success(`Workout completed! Logged ${durationMins} min & ${calories} kcal 🔥`);
+            speak(`Workout complete. You burned ${calories} calories. Great job!`);
             setActiveWorkout(null);
             // Refresh logs for calendar
             const res = await API.get(`/track/${user._id || user.id}`);
